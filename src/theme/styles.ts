@@ -31,6 +31,23 @@ export function useStyles() {
         return darkBackgroundColor;
       },
 
+      m_0: { margin: 0 },
+      p_0: { padding: 0 },
+      mb_16: { marginBottom: 16 },
+      mb_8: { marginBottom: 8 },
+      mb_4: { marginBottom: 4 },
+      mt_16: { marginTop: 16 },
+      mt_8: { marginTop: 8 },
+      mt_4: { marginTop: 4 },
+      mr_8: { marginRight: 8 },
+      ml_8: { marginLeft: 8 },
+      flexCenter: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      },
+      verticalCenter: { display: "flex", alignItems: "center" },
+      horizontalCenter: { display: "flex", justifyContent: "center" },
       // top navigation bar styles
       navTitleStyle: {
         fontSize: "1.5rem",
@@ -53,6 +70,11 @@ export function useStyles() {
       },
       navIconStyle: {
         color: primaryColor.color,
+      },
+      trackerIconStyle: {
+        // color: primaryColor.color,
+        color: isDark ? darkModeTextColor : darkModeTextColor,
+        fontSize: 46,
       },
 
       // sidebar styles
@@ -219,7 +241,7 @@ export function useStyles() {
 
       displayTitle: {
         fontSize: "14px",
-        fontWeight: 500,
+        fontWeight: 400,
         marginBottom: 4,
         letterSpacing: "0.5px",
         color: isDark ? darkModeTextColor : "#000",
@@ -283,6 +305,64 @@ export function useStyles() {
               row.index % 2 === 0 ? "#fff" : tableStripedRowColor,
           };
         }
+      },
+
+      // ticket details styles
+      ticketDetailsTitle: {
+        margin: 0,
+        fontWeight: 500,
+        fontSize: "1.25rem",
+        color: isDark ? darkModeTextColor : "#000",
+      },
+
+      newTicketCards: {
+        backgroundColor: isDark ? darkBackgroundColor : "#fff",
+        borderRadius: "8px",
+        boxShadow: isDark
+          ? "rgb(255 255 255 / 10%) 0px 2px 12px 4px"
+          : isDefaultSkin
+          ? "0 2px 12px rgba(0, 0, 0, 0.1)"
+          : "none",
+        margin: "0 auto",
+        border: isDefaultSkin ? "none" : `1px solid ${borderColor}`,
+        padding: "16px",
+        cursor: "pointer",
+        height: "100%",
+        "&:hover hr": {
+          width: "100%",
+        },
+        // change paragraph color when the card is hovered
+      },
+
+      newTicketCardTitle: {
+        color: isDark ? darkModeTextColor : "#000",
+        fontWeight: 600,
+        letterSpacing: "0.5px",
+        marginTop: 0,
+        marginBottom: "8px",
+      },
+      newTicketCardItem: {
+        color: isDark ? darkModeTextColor : "#000",
+        fontWeight: 400,
+        letterSpacing: "0.5px",
+        marginTop: 0,
+        marginBottom: "8px",
+        // how to add transition for both color and transform
+        transition: "color 0.3s, transform 0.3s",
+        "&:hover": {
+          color: primaryColor.color,
+          cursor: "pointer",
+          transform: "translateX(5px)",
+        },
+      },
+      newTicketHr: {
+        backgroundColor: primaryColor.color,
+        border: "none",
+        height: 2,
+        margin: "8px 0 16px 0",
+        width: "100px",
+        transition: "width 0.3s",
+        display: "block",
       },
     };
   }, [primaryColor, mode, skin]);

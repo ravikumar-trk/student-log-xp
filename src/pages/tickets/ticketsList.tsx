@@ -17,7 +17,8 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
+import { useNavigate } from 'react-router-dom';
+import { NewTicket } from '../../utils/routes';
 
 // Ticket data type
 type Ticket = {
@@ -126,14 +127,15 @@ export default function TicketsList() {
     // startDate and endDate state
     const [startDate, setStartDate] = useState<Dayjs | null>(null);
     const [endDate, setEndDate] = useState<Dayjs | null>(null);
+    const navigate = useNavigate();
 
     const columns = useMemo<MRT_ColumnDef<Ticket>[]>(
         () => [
             { accessorKey: 'TicketNo', header: 'Ticket No.', size: 160 },
             { accessorKey: 'Issue', header: 'Issue', size: 400 },
             { accessorKey: 'Priority', header: 'Priority', size: 120, Cell: PriorityCellRenderer },
-            { accessorKey: 'CreatedBy', header: 'Created By', size: 200 },
-            { accessorKey: 'CreatedOn', header: 'Created On', size: 160, Cell: CreatedCellRenderer },
+            { accessorKey: 'CreatedBy', header: 'Requested By', size: 200 },
+            { accessorKey: 'CreatedOn', header: 'Requested On', size: 160, Cell: CreatedCellRenderer },
             { accessorKey: 'Status', header: 'Status', size: 120, Cell: StatusCellRenderer },
             { id: 'actions', header: 'Actions', size: 80, Cell: ActionsCellRenderer },
         ],
@@ -146,6 +148,10 @@ export default function TicketsList() {
         data,
         ...(getTableOptions() as any),
     });
+
+    const navigateToNewTicket = () => {
+        navigate(NewTicket);
+    }
 
 
     return <>
@@ -198,7 +204,7 @@ export default function TicketsList() {
                     disabled={!startDate && !endDate}
                 /> &nbsp;&nbsp;
                 <ThemedButton text="Search" variant="contained" /> &nbsp;&nbsp;
-                <ThemedButton text="New Ticket" variant="contained" />
+                <ThemedButton text="New Ticket" variant="contained" handleClick={navigateToNewTicket} />
             </Grid>
         </Grid >
         <MaterialReactTable table={table} />

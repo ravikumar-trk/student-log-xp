@@ -5,6 +5,9 @@ import { Routes, Route } from 'react-router-dom';
 const AccountDashboard = lazy(() => import('../pages/account/accountDashboard'));
 const StudentsList = lazy(() => import('../pages/students/students'));
 const TicketsList = lazy(() => import('../pages/tickets/ticketsList'));
+const TicketDetails = lazy(() => import('../pages/tickets/ticketDetails'));
+const NewTicket = lazy(() => import('../pages/tickets/newTicket'));
+const AddPage = lazy(() => import('../pages/tickets/addPage'));
 
 const RouterPage = () => {
     const { bodyMainDiv, bodySubMainDiv } = useStyles();
@@ -17,6 +20,11 @@ const RouterPage = () => {
                         <Route path="/account" element={<AccountDashboard />} />
                         <Route path="/students" element={<StudentsList />} />
                         <Route path="/tickets" element={<TicketsList />} />
+                        <Route path="/tickets/:id" element={<TicketDetails />} />
+                        <Route path="/tickets/new" element={<NewTicket />} />
+                        <Route path="/tickets/addUser" element={<AddPage />} />
+                        <Route path="/tickets/addSchool" element={<AddPage />} />
+                        <Route path="/tickets/addStudent" element={<AddPage />} />
                         <Route path="/dashboard" element={<div style={{ padding: 24 }}>Dashboard</div>} />
                         <Route path="/" element={<div style={{ padding: 24 }}>Dashboard</div>} />
                         <Route path="*" element={<div style={{ padding: 24 }}>Page not found</div>} />

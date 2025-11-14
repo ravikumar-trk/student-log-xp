@@ -2,7 +2,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import { useStyles } from '../../theme/styles';
 import { useNavigate } from 'react-router-dom';
-import { AddUser, AddSchool, AddStudent } from "../../utils/routes";
+import RoutePaths from "../../utils/routes";
 
 const NewTicket = () => {
     const { ticketDetailsTitle, newTicketCards, newTicketCardTitle, newTicketCardItem, newTicketHr } = useStyles();
@@ -21,8 +21,8 @@ const NewTicket = () => {
                             <Box component="p" sx={newTicketCardTitle}>Users</Box>
                             <Box component="hr" sx={newTicketHr} />
                             <div>
-                                <Box component="p" sx={newTicketCardItem} onClick={() => navigate(AddUser)}>Add Users</Box>
-                                <Box component="p" sx={newTicketCardItem}>Edit Users</Box>
+                                <Box component="p" sx={newTicketCardItem} onClick={() => navigate(RoutePaths.AddUser)}>Add Users</Box>
+                                <Box component="p" sx={newTicketCardItem} onClick={() => navigate(RoutePaths.EditUser)}>Edit Users</Box>
                             </div>
                         </Box>
                     </Grid>
@@ -31,8 +31,8 @@ const NewTicket = () => {
                             <Box component="p" sx={newTicketCardTitle}>Schools</Box>
                             <Box component="hr" sx={newTicketHr} />
                             <div>
-                                <Box component="p" sx={newTicketCardItem} onClick={() => navigate(AddSchool)}>Add Schools</Box>
-                                <Box component="p" sx={newTicketCardItem}>Edit Schools</Box>
+                                <Box component="p" sx={newTicketCardItem} onClick={() => navigate(RoutePaths.AddSchool)}>Add Schools</Box>
+                                <Box component="p" sx={newTicketCardItem} onClick={() => navigate(RoutePaths.EditSchool)}>Edit Schools</Box>
                             </div>
                         </Box>
                     </Grid>
@@ -41,8 +41,8 @@ const NewTicket = () => {
                             <Box component="p" sx={newTicketCardTitle}>Students</Box>
                             <Box component="hr" sx={newTicketHr} />
                             <div>
-                                <Box component="p" sx={newTicketCardItem} onClick={() => navigate(AddStudent)}>Add Students</Box>
-                                <Box component="p" sx={newTicketCardItem}>Edit Students</Box>
+                                <Box component="p" sx={newTicketCardItem} onClick={() => navigate(RoutePaths.AddStudent)}>Add Students</Box>
+                                <Box component="p" sx={newTicketCardItem} onClick={() => navigate(RoutePaths.EditStudent)}>Edit Students</Box>
                             </div>
                         </Box>
                     </Grid>

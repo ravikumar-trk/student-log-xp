@@ -1,0 +1,142 @@
+export const userColumns = [
+  { field: "FirstName", headerName: "First Name", width: 150 },
+  { field: "LastName", headerName: "Last Name", width: 150 },
+  { field: "Email", headerName: "Email", width: 200 },
+  { field: "Role", headerName: "Role", width: 120 },
+  { field: "Phone", headerName: "Phone", width: 150 },
+  { field: "Active", headerName: "Active", width: 150 },
+];
+
+export const schoolColumns = [
+  { field: "AccountCode", headerName: "Account Code", width: 200 },
+  { field: "SchoolName", headerName: "School Name", width: 200 },
+  { field: "SchoolCode", headerName: "School Code", width: 200 },
+  { field: "Location", headerName: "Location", width: 250 },
+  { field: "City", headerName: "City", width: 120 },
+  { field: "State", headerName: "State", width: 80 },
+  { field: "Zip", headerName: "Zip", width: 100 },
+  { field: "Phone", headerName: "Phone", width: 150 },
+  { field: "Principal", headerName: "Principal", width: 150 },
+  { field: "Active", headerName: "Active", width: 150 },
+];
+
+export const studentColumns = [
+  { field: "AccountCode", headerName: "Account Code", width: 200 },
+  { field: "SchoolCode", headerName: "School Code", width: 200 },
+  { field: "ClassCode", headerName: "Class Code", width: 200 },
+  { field: "AdmissionNo", headerName: "Admission No.", width: 200 },
+  { field: "RollNo", headerName: "Roll No.", width: 200 },
+  { field: "FullName", headerName: "Full Name", width: 200 },
+  // { field: "LastName", headerName: "Last Name", width: 150 },
+  { field: "ParentName", headerName: "Parent Name", width: 150 },
+  // { field: "ParentEmail", headerName: "Parent Email", width: 200 },
+  { field: "ParentPhone", headerName: "Parent Phone", width: 200 },
+  { field: "Address", headerName: "Address", width: 200 },
+  { field: "Active", headerName: "Active", width: 150 },
+];
+
+/// create sample data for users, schools, students
+export const sampleUserData = [
+  {
+    FirstName: "John",
+    LastName: "Doe",
+    Email: "john.doe@example.com",
+    Role: "Admin",
+    Phone: "123-456-7890",
+    Active: true,
+  },
+  {
+    FirstName: "Jane",
+    LastName: "Smith",
+    Email: "jane.smith@example.com",
+    Role: "User",
+    Phone: "987-654-3210",
+    Active: true,
+  },
+  {
+    FirstName: "Alice",
+    LastName: "Johnson",
+    Email: "alice.johnson@example.com",
+    Role: "User",
+    Phone: "555-555-5555",
+    Active: false,
+  },
+];
+
+export const sampleSchoolData = [
+  {
+    AccountCode: "AC001",
+    SchoolName: "Greenwood High",
+    SchoolCode: "GH001",
+    Location: "123 Main St",
+    City: "Springfield",
+    State: "IL",
+    Zip: "62701",
+    Phone: "217-555-1234",
+    Principal: "Mr. Brown",
+    Active: true,
+  },
+  {
+    AccountCode: "AC002",
+    SchoolName: "Lakeside Academy",
+    SchoolCode: "LA002",
+    Location: "456 Lake St",
+    City: "Madison",
+    State: "WI",
+    Zip: "53703",
+    Phone: "608-555-5678",
+    Principal: "Ms. Green",
+    Active: true,
+  },
+  {
+    AccountCode: "AC003",
+    SchoolName: "Hilltop School",
+    SchoolCode: "HS003",
+    Location: "789 Hill St",
+    City: "Denver",
+    State: "CO",
+    Zip: "80202",
+    Phone: "303-555-9012",
+    Principal: "Dr. White",
+    Active: false,
+  },
+];
+
+export const sampleStudentData = [
+  {
+    AccountCode: "AC001",
+    SchoolCode: "GH001",
+    ClassCode: "10A",
+    AdmissionNo: "ADM1001",
+    RollNo: "R001",
+    FullName: "Michael Scott",
+    ParentName: "Holly Scott",
+    ParentPhone: "123-456-7890",
+    Address: "123 Main St, Springfield, IL",
+    Active: true,
+  },
+  {
+    AccountCode: "AC002",
+    SchoolCode: "LA002",
+    ClassCode: "9B",
+    AdmissionNo: "ADM2001",
+    RollNo: "R002",
+    FullName: "Pam Beesly",
+    ParentName: "Jim Beesly",
+    ParentPhone: "987-654-3210",
+    Address: "456 Lake St, Madison, WI",
+    Active: true,
+  },
+  {
+    AccountCode: "AC003",
+    SchoolCode: "HS003",
+    ClassCode: "8C",
+    AdmissionNo: "ADM3001",
+    RollNo: "R003",
+    FullName: "Dwight Schrute",
+    ParentName: "Angela Schrute",
+    ParentPhone: "555-555-5555",
+    Address: "789 Hill St, Denver, CO",
+    Active: false,
+  },
+];

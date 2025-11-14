@@ -18,7 +18,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useNavigate } from 'react-router-dom';
-import { NewTicket } from '../../utils/routes';
+import RoutePaths from '../../utils/routes';
 
 // Ticket data type
 type Ticket = {
@@ -150,7 +150,7 @@ export default function TicketsList() {
     });
 
     const navigateToNewTicket = () => {
-        navigate(NewTicket);
+        navigate(RoutePaths.NewTicket);
     }
 
 

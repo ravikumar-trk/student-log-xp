@@ -66,7 +66,7 @@ export function useStyles() {
         background: primaryColor.lightColor,
         boxShadow: isDefaultSkin ? "0 2px 4px rgba(0, 0, 0, 0.1)" : "none",
         borderRadius: 12,
-        border: `1px solid ${primaryColor.color}`,
+        // border: `1px solid ${primaryColor.color}`,
       },
       navIconStyle: {
         color: primaryColor.color,
@@ -297,7 +297,9 @@ export function useStyles() {
       muiTableBodyRowProps: (row: any) => {
         if (isDark) {
           // In dark mode, all rows get darkModeTableRowColor
-          return { backgroundColor: darkModeTableRowColor };
+          return {
+            backgroundColor: darkModeTableRowColor,
+          };
         } else {
           // In normal mode, striped rows alternate between #fff and tableStripedRowColor
           return {
@@ -363,6 +365,20 @@ export function useStyles() {
         width: "100px",
         transition: "width 0.3s",
         display: "block",
+      },
+
+      // model
+      dialogStyles: {
+        "& .MuiDialog-paper": {
+          backgroundColor: isDark ? darkBackgroundColor : "#fff",
+        },
+        "& .MuiDialogTitle-root": {
+          color: isDark ? darkModeTextColor : "#000",
+        },
+        "& .MuiDialogContent-root": {
+          borderTop: `1px solid ${isDark ? darkModeTextColor : borderColor}`,
+          borderBottom: `1px solid ${isDark ? darkModeTextColor : borderColor}`,
+        },
       },
     };
   }, [primaryColor, mode, skin]);

@@ -8,6 +8,7 @@ const TicketsList = lazy(() => import('../pages/tickets/ticketsList'));
 const TicketDetails = lazy(() => import('../pages/tickets/ticketDetails'));
 const NewTicket = lazy(() => import('../pages/tickets/newTicket'));
 const AddPage = lazy(() => import('../pages/tickets/addPage'));
+const EditPage = lazy(() => import('../pages/tickets/editPage'));
 
 const RouterPage = () => {
     const { bodyMainDiv, bodySubMainDiv } = useStyles();
@@ -25,6 +26,9 @@ const RouterPage = () => {
                         <Route path="/tickets/addUser" element={<AddPage />} />
                         <Route path="/tickets/addSchool" element={<AddPage />} />
                         <Route path="/tickets/addStudent" element={<AddPage />} />
+                        <Route path="/tickets/editUser" element={<EditPage />} />
+                        <Route path="/tickets/editSchool" element={<EditPage />} />
+                        <Route path="/tickets/editStudent" element={<EditPage />} />
                         <Route path="/dashboard" element={<div style={{ padding: 24 }}>Dashboard</div>} />
                         <Route path="/" element={<div style={{ padding: 24 }}>Dashboard</div>} />
                         <Route path="*" element={<div style={{ padding: 24 }}>Page not found</div>} />

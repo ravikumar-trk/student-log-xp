@@ -23,6 +23,9 @@ const ThemedTextField: React.FC<TextFieldProps> = (props) => {
             color: isDark ? '#fff' : '#000',
         },
         // standard input underline
+        '& .MuiInput-underline': {
+            border: 'unset !important',
+        },
         '& .MuiInput-underline:hover': {
             borderBottom: isDark ? '1px solid #fff' : '1px solid #000',
         },

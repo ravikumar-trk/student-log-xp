@@ -3,7 +3,12 @@ import { useStyles } from '../../theme/styles';
 import { useLocation, useNavigate } from "react-router-dom";
 import ThemedButton from "../../common/ThemedButton";
 import * as XLSX from 'xlsx-js-style';
-import { NewTicket } from "../../utils/routes";
+import RoutePaths from "../../utils/routes";
+import { schoolColumns, studentColumns, userColumns } from "../../utils/columns";
+import { useMemo, useState } from 'react';
+import { MaterialReactTable, useMaterialReactTable, type MRT_ColumnDef } from 'material-react-table';
+import { getTableOptions } from '../../common/tableStyles';
+import NoDataImage from '../../assets/images/NoData.svg';
 
 
 const AddPage = () => {
@@ -13,6 +18,7 @@ const AddPage = () => {
     const isAddUser = location.pathname.includes("addUser");
     const isAddSchool = location.pathname.includes("addSchool");
     const isAddStudent = location.pathname.includes("addStudent");
+    const [uploadedData, setUploadedData] = useState<any[] | null>(null);
 
     const renderTitle = () => {
         if (isAddUser) return "Add Users";
@@ -24,22 +30,16 @@ const AddPage = () => {
     const handleTemplateClick = () => {
         // generate and download an XLSX template based on the type of entity
         const getColumns = () => {
-            if (isAddUser) return [
-                'FirstName', 'LastName', 'Email', 'Role', 'Phone'
-            ];
-            if (isAddSchool) return [
-                'SchoolName', 'Address', 'City', 'State', 'Zip', 'Phone', 'Principal'
-            ];
-            if (isAddStudent) return [
-                'FirstName', 'LastName', 'DOB', 'SchoolID', 'Grade', 'ParentName', 'ParentEmail'
-            ];
-            return ['col1', 'col2'];
+            if (isAddUser) return userColumns.map(c => c.field);
+            else if (isAddSchool) return schoolColumns.map(c => c.field);
+            else if (isAddStudent) return studentColumns.map(c => c.field);
+
         };
 
-        const cols = getColumns();
+        const cols: any = getColumns();
 
         // Build worksheet data: header row only
-        const data = [cols];
+        const data: any = [cols];
         const ws = XLSX.utils.aoa_to_sheet(data);
 
         // Style header cells and set widths
@@ -62,7 +62,7 @@ const AddPage = () => {
         }
 
         // set column widths based on header text length
-        ws['!cols'] = cols.map((h) => ({ wch: Math.max(10, h.length + 6) }));
+        ws['!cols'] = cols.map((h: any) => ({ wch: Math.max(10, h.length + 6) }));
 
         const wb = XLSX.utils.book_new();
         // determine sheet name based on type
@@ -108,6 +108,7 @@ const AddPage = () => {
                 // Convert sheet to JSON (array of objects using header row)
                 const json = XLSX.utils.sheet_to_json(ws, { defval: null });
                 console.log('Uploaded Excel parsed JSON:', json);
+                setUploadedData(json as any[]);
             } catch (err) {
                 console.error('Error parsing Excel file', err);
             }
@@ -119,21 +120,49 @@ const AddPage = () => {
     };
 
     const navigateToNewTicket = () => {
-        navigate(NewTicket);
+        navigate(RoutePaths.NewTicket);
     }
 
     return (
-        <Grid container spacing={2} sx={{ p: 2 }}>
-            <Grid size={8}>
-                <h3 style={ticketDetailsTitle}>{renderTitle()}</h3>
+        <>
+            <Grid container spacing={2} sx={{ p: 2 }}>
+                <Grid size={8} style={{ display: 'flex', alignItems: 'center' }}>
+                    <h3 style={ticketDetailsTitle}>{renderTitle()}</h3>
+                </Grid>
+                <Grid size={4} style={{ display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
+                    <ThemedButton text="Template" variant="contained" iconPosition="end" icon="download" handleClick={handleTemplateClick} /> &nbsp;&nbsp;
+                    <ThemedButton text="Upload File" variant="contained" iconPosition="end" icon="upload" isFile={true} handleClick={handleUploadFileClick} /> &nbsp;&nbsp;
+                    <ThemedButton text="Back" variant="contained" handleClick={navigateToNewTicket} />
+                </Grid>
             </Grid>
-            <Grid size={4} style={{ display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
-                <ThemedButton text="Template" variant="contained" iconPosition="end" icon="download" handleClick={handleTemplateClick} /> &nbsp;&nbsp;
-                <ThemedButton text="Upload File" variant="contained" iconPosition="end" icon="upload" isFile={true} handleClick={handleUploadFileClick} /> &nbsp;&nbsp;
-                <ThemedButton text="Back" variant="contained" handleClick={navigateToNewTicket} />
-            </Grid>
-        </Grid>
+            {uploadedData ? (
+                <div style={{ marginTop: 16 }}>
+                    <UploadedDataTable data={uploadedData} isUser={isAddUser} isSchool={isAddSchool} isStudent={isAddStudent} />
+                </div>
+            ) : (
+                <div style={{ textAlign: 'center', marginTop: 50, paddingBottom: 16 }}>
+                    <img src={NoDataImage} alt="No Data" style={{ width: 150, opacity: 0.5 }} />
+                    <p style={{ color: '#888', fontSize: 18 }}>No data uploaded. Please upload an Excel file to see the data here.</p>
+                </div>
+            )}
+        </>
     );
 };
+
+function UploadedDataTable({ data, isUser, isSchool, isStudent }: { readonly data: any[]; readonly isUser: boolean; readonly isSchool: boolean; readonly isStudent: boolean; }) {
+    let schema: any[] = [];
+    if (isUser) schema = userColumns;
+    else if (isSchool) schema = schoolColumns;
+    else if (isStudent) schema = studentColumns;
+    const columns = useMemo<MRT_ColumnDef<any>[]>(() => schema.map((c: any) => ({ accessorKey: c.field, header: c.headerName, size: c.width })), [schema]);
+
+    const table = useMaterialReactTable({
+        columns,
+        data,
+        ...(getTableOptions() as any),
+    });
+
+    return <MaterialReactTable table={table} />;
+}
 
 export default AddPage;

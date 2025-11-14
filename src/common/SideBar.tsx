@@ -4,6 +4,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SchoolIcon from '@mui/icons-material/School';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
+import SummarizeIcon from '@mui/icons-material/Summarize';
 import { useAppSelector } from '../hooks/reduxHooks';
 import { useStyles } from '../theme/styles';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -18,6 +19,7 @@ const SideBar: React.FC = () => {
         { text: 'Account', icon: <AccountCircleIcon /> },
         { text: 'Students', icon: <SchoolIcon /> },
         { text: 'Tickets', icon: <FactCheckIcon /> },
+        { text: 'Reports', icon: <SummarizeIcon /> },
     ];
     const [selected, setSelected] = useState('Dashboard');
 
@@ -73,3 +75,4 @@ const SideBar: React.FC = () => {
 };
 
 export default SideBar;
+

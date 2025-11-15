@@ -1,9 +1,11 @@
-import { configureStore } from '@reduxjs/toolkit';
-import themeReducer from '../features/theme/themeSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import themeReducer from "../features/theme/themeSlice";
+import commonReducer from "../features/common/commonSlice";
 
 export const store = configureStore({
   reducer: {
     theme: themeReducer,
+    common: commonReducer,
   },
 });
 

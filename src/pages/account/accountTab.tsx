@@ -12,12 +12,32 @@ import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import GroupIcon from '@mui/icons-material/Group';
 import BusinessIcon from '@mui/icons-material/Business';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
+import { useEffect, useState } from 'react';
+import masterServices from '../../services/masterSerices';
+import type { AccountModel } from '../../models/AccountModel';
+
 
 const AccountTab = () => {
     const { accountTabStyles, accountTabImageDiv, accountTabLogo, displayTitle, displayValue, navIconButtonStyle, navIconStyle } = useStyles();
     const primaryColor = useAppSelector((state) => state.theme.primaryColor);
     const mode = useAppSelector((state) => state.theme.mode);
     const skin = useAppSelector((state) => state.theme.skin);
+    const [account, setAccount] = useState<AccountModel | null>(null);
+
+    const getAccountDetailsAPI = async () => {
+        try {
+            const res: any = await masterServices.getAccountDetails(2);
+            const data: AccountModel | null = res?.data?.Data[0] ?? null;
+            setAccount(data);
+        } catch (err: any) {
+            console.error(err?.message ?? err);
+            alert(err?.message ?? 'Failed to fetch account details');
+        }
+    }
+
+    useEffect(() => {
+        getAccountDetailsAPI();
+    }, []);
 
     const selectedLogo = mode === "dark" ? whiteLogo : blueLogo;
 
@@ -35,7 +55,7 @@ const AccountTab = () => {
                             </IconButton>
                             <div>
                                 <div style={displayTitle}>Name</div>
-                                <div style={displayValue}>Rubiks</div>
+                                <div style={displayValue}>{account?.AccountName ?? '-'}</div>
                             </div>
                         </div>
                     </Grid>
@@ -46,7 +66,7 @@ const AccountTab = () => {
                             </IconButton>
                             <div>
                                 <div style={displayTitle}>Email</div>
-                                <div style={displayValue}>rubiks@example.com</div>
+                                <div style={displayValue}>{account?.Email ?? '-'}</div>
                             </div>
                         </div>
                     </Grid>
@@ -57,7 +77,7 @@ const AccountTab = () => {
                             </IconButton>
                             <div>
                                 <div style={displayTitle}>Registered On</div>
-                                <div style={displayValue}>2022-01-01</div>
+                                <div style={displayValue}>{account?.CreatedOn ?? '-'}</div>
                             </div>
                         </div>
                     </Grid>
@@ -79,7 +99,7 @@ const AccountTab = () => {
                             </IconButton>
                             <div>
                                 <div style={displayTitle}>Schools</div>
-                                <div style={displayValue}>5</div>
+                                <div style={displayValue}>{account?.Schools ?? '-'}</div>
                             </div>
                         </div>
                     </Grid>
@@ -90,7 +110,7 @@ const AccountTab = () => {
                             </IconButton>
                             <div>
                                 <div style={displayTitle}>Users</div>
-                                <div style={displayValue}>10</div>
+                                <div style={displayValue}>{account?.Users ?? '-'}</div>
                             </div>
                         </div>
                     </Grid>

@@ -15,6 +15,7 @@ import AnalyticsIcon from '@mui/icons-material/Analytics';
 import { useEffect, useState } from 'react';
 import masterServices from '../../services/masterSerices';
 import type { AccountModel } from '../../models/AccountModel';
+import Skeleton from '@mui/material/Skeleton';
 
 
 const AccountTab = () => {
@@ -23,14 +24,19 @@ const AccountTab = () => {
     const mode = useAppSelector((state) => state.theme.mode);
     const skin = useAppSelector((state) => state.theme.skin);
     const [account, setAccount] = useState<AccountModel | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
 
     const getAccountDetailsAPI = async () => {
         try {
             const res: any = await masterServices.getAccountDetails(2);
             const data: AccountModel | null = res?.data?.Data[0] ?? null;
             setAccount(data);
+            setTimeout(() => {
+                setLoading(false);
+            }, 500);
         } catch (err: any) {
             console.error(err?.message ?? err);
+            setLoading(false);
             alert(err?.message ?? 'Failed to fetch account details');
         }
     }
@@ -55,7 +61,9 @@ const AccountTab = () => {
                             </IconButton>
                             <div>
                                 <div style={displayTitle}>Name</div>
-                                <div style={displayValue}>{account?.AccountName ?? '-'}</div>
+                                <div style={displayValue}>
+                                    {loading ? <Skeleton variant="text" width={210} /> : account?.AccountName ?? '-'}
+                                </div>
                             </div>
                         </div>
                     </Grid>
@@ -66,7 +74,9 @@ const AccountTab = () => {
                             </IconButton>
                             <div>
                                 <div style={displayTitle}>Email</div>
-                                <div style={displayValue}>{account?.Email ?? '-'}</div>
+                                <div style={displayValue}>
+                                    {loading ? <Skeleton variant="text" width={220} /> : account?.Email ?? '-'}
+                                </div>
                             </div>
                         </div>
                     </Grid>
@@ -77,7 +87,9 @@ const AccountTab = () => {
                             </IconButton>
                             <div>
                                 <div style={displayTitle}>Registered On</div>
-                                <div style={displayValue}>{account?.CreatedOn ?? '-'}</div>
+                                <div style={displayValue}>
+                                    {loading ? <Skeleton variant="text" width={160} /> : account?.CreatedOn ?? '-'}
+                                </div>
                             </div>
                         </div>
                     </Grid>
@@ -88,7 +100,9 @@ const AccountTab = () => {
                             </IconButton>
                             <div>
                                 <div style={displayTitle}>Plan</div>
-                                <div style={displayValue}><Chip status='glod' /></div>
+                                <div style={displayValue}>
+                                    {loading ? <Skeleton variant="text" width={160} /> : <Chip status={account?.PlanCode} />}
+                                </div>
                             </div>
                         </div>
                     </Grid>
@@ -99,7 +113,9 @@ const AccountTab = () => {
                             </IconButton>
                             <div>
                                 <div style={displayTitle}>Schools</div>
-                                <div style={displayValue}>{account?.Schools ?? '-'}</div>
+                                <div style={displayValue}>
+                                    {loading ? <Skeleton variant="text" width={180} /> : account?.Schools ?? '-'}
+                                </div>
                             </div>
                         </div>
                     </Grid>
@@ -110,7 +126,9 @@ const AccountTab = () => {
                             </IconButton>
                             <div>
                                 <div style={displayTitle}>Users</div>
-                                <div style={displayValue}>{account?.Users ?? '-'}</div>
+                                <div style={displayValue}>
+                                    {loading ? <Skeleton variant="text" width={180} /> : account?.Users ?? '-'}
+                                </div>
                             </div>
                         </div>
                     </Grid>

@@ -12,6 +12,7 @@ import masterServices from '../../services/masterSerices';
 
 const UserTab = () => {
     const [users, setUsers] = useState<UserModel[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
     const columns = useMemo<MRT_ColumnDef<UserModel>[]>(
         () =>
             UserTableColumns.map(column => {
@@ -32,9 +33,13 @@ const UserTab = () => {
     const getUsersByAccountIDAPI = async () => {
         try {
             const res: any = await masterServices.getUsersByAccountID(2);
-            setUsers(res?.data?.Data ?? []);
+            setTimeout(() => {
+                setLoading(false);
+                setUsers(res?.data?.Data ?? []);
+            }, 1000);
         } catch (err: any) {
             console.error(err?.message ?? err);
+            setLoading(false);
             alert(err?.message ?? 'Failed to fetch account details');
         }
     }
@@ -46,12 +51,16 @@ const UserTab = () => {
     const table = useMaterialReactTable({
         columns,
         data: users,
+        state: {
+            isLoading: loading,
+            showLoadingOverlay: false,
+        },
         ...getTableOptions(),
     });
 
-    return <MaterialReactTable table={table}
-
-    />;
+    return (
+        <MaterialReactTable table={table}
+        />);
 };
 
 export default UserTab;

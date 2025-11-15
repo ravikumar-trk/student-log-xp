@@ -12,6 +12,7 @@ import { SchoolTableColumns } from './utils'
 
 const SchoolTab = () => {
     const [schools, setSchools] = useState<SchoolModel[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
     const columns = useMemo<MRT_ColumnDef<SchoolModel>[]>(
         () =>
             SchoolTableColumns.map(column => {
@@ -32,9 +33,13 @@ const SchoolTab = () => {
     const getSchoolsByAccountIDAPI = async () => {
         try {
             const res: any = await masterServices.getSchoolsByAccountID(2);
-            setSchools(res?.data?.Data ?? []);
+            setTimeout(() => {
+                setLoading(false);
+                setSchools(res?.data?.Data ?? []);
+            }, 1000);
         } catch (err: any) {
             console.error(err?.message ?? err);
+            setLoading(false);
             alert(err?.message ?? 'Failed to fetch account details');
         }
     }
@@ -47,6 +52,10 @@ const SchoolTab = () => {
     const table = useMaterialReactTable({
         columns,
         data: schools,
+        state: {
+            isLoading: loading,
+            showLoadingOverlay: false,
+        },
         ...getTableOptions(),
     });
 

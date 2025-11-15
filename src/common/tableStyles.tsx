@@ -29,5 +29,9 @@ export const getTableOptions = () => {
         muiBottomToolbarProps: {
             sx: { ...tableToolBarStyles }
         },
+        muiSkeletonProps: {
+            animation: 'pulse',
+            height: 28,
+        },
     };
 };

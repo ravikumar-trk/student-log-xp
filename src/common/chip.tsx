@@ -4,7 +4,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 
-type ChipProps = { status: string };
+type ChipProps = { status?: string };
 
 const baseStyle: React.CSSProperties = {
 
@@ -65,13 +65,14 @@ function pickPlanStyle(normalized: string): StyleAndIcon | null {
     return null;
 }
 
-function pickStatusStyle(status: string): StyleAndIcon | null {
+function pickStatusStyle(status?: string): StyleAndIcon | null {
+    if (!status) return null;
     if (statusStyles[status]) return statusStyles[status];
     return null;
 }
 
 const Chip: React.FC<ChipProps> = ({ status }) => {
-    const normalized = status;
+    const normalized = status?.toLowerCase() ?? '';
 
     const computed = useMemo<StyleAndIcon>(() => {
         // Try plan-first matching (case-insensitive / partial)

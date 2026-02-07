@@ -1,24 +1,123 @@
-export const userColumns = [
-  { field: "FirstName", headerName: "First Name", width: 150 },
-  { field: "LastName", headerName: "Last Name", width: 150 },
-  { field: "Email", headerName: "Email", width: 200 },
-  { field: "Role", headerName: "Role", width: 120 },
-  { field: "Phone", headerName: "Phone", width: 150 },
-  { field: "Active", headerName: "Active", width: 150 },
+export const SchoolTableColumns = [
+  {
+    accessorKey: "SchoolName",
+    header: "Name",
+    size: 200,
+    excelIgnore: false,
+  },
+  {
+    accessorKey: "SchoolCode",
+    header: "Code",
+    size: 120,
+    excelIgnore: false,
+  },
+  {
+    accessorKey: "City",
+    header: "Location",
+    size: 180,
+    excelIgnore: false,
+  },
+  {
+    accessorKey: "CreatedOn",
+    header: "Created Date",
+    size: 160,
+    excelIgnore: true, // this column should be ignored when generating Excel template
+  },
+  {
+    accessorKey: "Status",
+    header: "Status",
+    size: 120,
+    excelIgnore: true, // this column should be ignored when generating Excel template
+  },
 ];
 
-export const schoolColumns = [
-  { field: "AccountCode", headerName: "Account Code", width: 200 },
-  { field: "SchoolName", headerName: "School Name", width: 200 },
-  { field: "SchoolCode", headerName: "School Code", width: 200 },
-  { field: "Location", headerName: "Location", width: 250 },
-  { field: "City", headerName: "City", width: 120 },
-  { field: "State", headerName: "State", width: 80 },
-  { field: "Zip", headerName: "Zip", width: 100 },
-  { field: "Phone", headerName: "Phone", width: 150 },
-  { field: "Principal", headerName: "Principal", width: 150 },
-  { field: "Active", headerName: "Active", width: 150 },
+export const UserTableColumns = [
+  {
+    accessorKey: "UserName",
+    header: "Name",
+    size: 200,
+    excelIgnore: false,
+  },
+  {
+    accessorKey: "Email",
+    header: "Email",
+    size: 220,
+    excelIgnore: false,
+  },
+  {
+    accessorKey: "SchoolNames",
+    header: "School",
+    size: 180,
+    excelIgnore: false,
+  },
+  {
+    accessorKey: "CreatedOn",
+    header: "Created Date",
+    size: 160,
+    excelIgnore: true, // this column should be ignored when generating Excel template
+  },
+  {
+    accessorKey: "Status",
+    header: "Status",
+    size: 120,
+    excelIgnore: true, // this column should be ignored when generating Excel template
+  },
 ];
+
+export const StudentTableColumns = [
+  {
+    accessorKey: "SchoolName",
+    header: "School",
+    size: 240,
+    excelIgnore: false,
+  },
+  {
+    accessorKey: "ClassCode",
+    header: "Class",
+    size: 140,
+    excelIgnore: false,
+  },
+  {
+    accessorKey: "AdmissionNo",
+    header: "Admission No.",
+    size: 160,
+    excelIgnore: false,
+  },
+  {
+    accessorKey: "RollNo",
+    header: "Roll No.",
+    size: 100,
+    excelIgnore: false,
+  },
+  {
+    accessorKey: "StudentName",
+    header: "Student Name",
+    size: 240,
+    excelIgnore: false,
+  },
+];
+
+// export const userColumns = [
+//   { field: "FirstName", headerName: "First Name", width: 150 },
+//   { field: "LastName", headerName: "Last Name", width: 150 },
+//   { field: "Email", headerName: "Email", width: 200 },
+//   { field: "Role", headerName: "Role", width: 120 },
+//   { field: "Phone", headerName: "Phone", width: 150 },
+//   { field: "Active", headerName: "Active", width: 150 },
+// ];
+
+// export const schoolColumns = [
+//   { field: "AccountCode", headerName: "Account Code", width: 200 },
+//   { field: "SchoolName", headerName: "School Name", width: 200 },
+//   { field: "SchoolCode", headerName: "School Code", width: 200 },
+//   { field: "Location", headerName: "Location", width: 250 },
+//   { field: "City", headerName: "City", width: 120 },
+//   { field: "State", headerName: "State", width: 80 },
+//   { field: "Zip", headerName: "Zip", width: 100 },
+//   { field: "Phone", headerName: "Phone", width: 150 },
+//   { field: "Principal", headerName: "Principal", width: 150 },
+//   { field: "Active", headerName: "Active", width: 150 },
+// ];
 
 export const studentColumns = [
   { field: "AccountCode", headerName: "Account Code", width: 200 },

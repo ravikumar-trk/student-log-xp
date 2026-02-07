@@ -1,6 +1,10 @@
 import { Suspense, lazy } from 'react';
 import { useStyles } from '../theme/styles';
 import { Routes, Route } from 'react-router-dom';
+import SettingsDashboard from '../pages/settings/settingsdashboard';
+import ConfigureClasses from '../pages/settings/configureClasses';
+import HolidaysList from '../pages/settings/holidaysList';
+import UploadPage from '../pages/tickets/uploadPage';
 
 const AccountDashboard = lazy(() => import('../pages/account/accountDashboard'));
 const StudentsList = lazy(() => import('../pages/students/students'));
@@ -29,6 +33,10 @@ const RouterPage = () => {
                         <Route path="/tickets/editUser" element={<EditPage />} />
                         <Route path="/tickets/editSchool" element={<EditPage />} />
                         <Route path="/tickets/editStudent" element={<EditPage />} />
+                        <Route path="/tickets/uploadExcel" element={<UploadPage />} />
+                        <Route path="/settings" element={<SettingsDashboard />} />
+                        <Route path="/settings/configureClasses" element={<ConfigureClasses />} />
+                        <Route path="/settings/holidays" element={<HolidaysList />} />
                         <Route path="/dashboard" element={<div style={{ padding: 24 }}>Dashboard</div>} />
                         <Route path="/" element={<div style={{ padding: 24 }}>Dashboard</div>} />
                         <Route path="*" element={<div style={{ padding: 24 }}>Page not found</div>} />

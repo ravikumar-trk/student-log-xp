@@ -1,7 +1,7 @@
 import CloseIcon from '@mui/icons-material/Close';
 import PersonIcon from '@mui/icons-material/Person';
 import React from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Avatar, Drawer, ToggleButtonGroup, ToggleButton, Box } from '@mui/material';
+import { AppBar, Toolbar, Typography, IconButton, Avatar, Drawer, Box } from '@mui/material';
 import PaletteIcon from '@mui/icons-material/Palette';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';

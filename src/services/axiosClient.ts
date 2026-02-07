@@ -48,7 +48,6 @@ axiosClient.interceptors.request.use(
 // -----------------------
 axiosClient.interceptors.response.use(
   async (response) => {
-    debugger;
     // Handle success responses (200, 201, 202)
     const status = response.status;
 

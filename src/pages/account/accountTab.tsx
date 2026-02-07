@@ -29,10 +29,10 @@ const AccountTab = () => {
     const getAccountDetailsAPI = async () => {
         try {
             const res: any = await masterServices.getAccountDetails(2);
-            const data: AccountModel | null = res?.data?.Data[0] ?? null;
-            setAccount(data);
             setTimeout(() => {
                 setLoading(false);
+                const data: AccountModel | null = res?.data?.Result[0] ?? null;
+                setAccount(data);
             }, 500);
         } catch (err: any) {
             console.error(err?.message ?? err);

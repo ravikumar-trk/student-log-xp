@@ -1,18 +1,20 @@
 import Grid from "@mui/material/Grid";
+import Box from '@mui/material/Box';
 import { useStyles } from '../../theme/styles';
 import { useLocation, useNavigate } from "react-router-dom";
 import ThemedButton from "../../common/ThemedButton";
 import * as XLSX from 'xlsx-js-style';
 import RoutePaths from "../../utils/routes";
-import { schoolColumns, studentColumns, userColumns } from "../../utils/columns";
+import { SchoolTableColumns, StudentTableColumns, UserTableColumns } from "../../utils/columns";
 import { useMemo, useState } from 'react';
 import { MaterialReactTable, useMaterialReactTable, type MRT_ColumnDef } from 'material-react-table';
 import { getTableOptions } from '../../common/tableStyles';
 import NoDataImage from '../../assets/images/NoData.svg';
+import Typography from '@mui/material/Typography';
 
 
 const AddPage = () => {
-    const { ticketDetailsTitle } = useStyles();
+    const { pageDetailsTitle, noDataImageDivStyle, noDataImageStyle, noDataImageStyleText } = useStyles();
     const location = useLocation();
     const navigate = useNavigate();
     const isAddUser = location.pathname.includes("addUser");
@@ -30,10 +32,9 @@ const AddPage = () => {
     const handleTemplateClick = () => {
         // generate and download an XLSX template based on the type of entity
         const getColumns = () => {
-            if (isAddUser) return userColumns.map(c => c.field);
-            else if (isAddSchool) return schoolColumns.map(c => c.field);
-            else if (isAddStudent) return studentColumns.map(c => c.field);
-
+            if (isAddUser) return UserTableColumns.filter((a: any) => !a.excelIgnore).map(c => c.header)
+            else if (isAddSchool) return SchoolTableColumns.filter((a: any) => !a.excelIgnore).map(c => c.header);
+            else if (isAddStudent) return StudentTableColumns.filter((a: any) => !a.excelIgnore).map(c => c.header);
         };
 
         const cols: any = getColumns();
@@ -127,12 +128,12 @@ const AddPage = () => {
         <>
             <Grid container spacing={2} sx={{ p: 2 }}>
                 <Grid size={8} style={{ display: 'flex', alignItems: 'center' }}>
-                    <h3 style={ticketDetailsTitle}>{renderTitle()}</h3>
+                    <h3 style={pageDetailsTitle}>{renderTitle()}</h3>
                 </Grid>
                 <Grid size={4} style={{ display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
+                    <ThemedButton text="Back" variant="outlined" handleClick={navigateToNewTicket} /> &nbsp;&nbsp;
                     <ThemedButton text="Template" variant="contained" iconPosition="end" icon="download" handleClick={handleTemplateClick} /> &nbsp;&nbsp;
-                    <ThemedButton text="Upload File" variant="contained" iconPosition="end" icon="upload" isFile={true} handleClick={handleUploadFileClick} /> &nbsp;&nbsp;
-                    <ThemedButton text="Back" variant="contained" handleClick={navigateToNewTicket} />
+                    <ThemedButton text="Upload File" variant="contained" iconPosition="end" icon="upload" isFile={true} handleClick={handleUploadFileClick} />
                 </Grid>
             </Grid>
             {uploadedData ? (
@@ -140,10 +141,10 @@ const AddPage = () => {
                     <UploadedDataTable data={uploadedData} isUser={isAddUser} isSchool={isAddSchool} isStudent={isAddStudent} />
                 </div>
             ) : (
-                <div style={{ textAlign: 'center', marginTop: 50, paddingBottom: 16 }}>
-                    <img src={NoDataImage} alt="No Data" style={{ width: 150, opacity: 0.5 }} />
-                    <p style={{ color: '#888', fontSize: 18 }}>No data uploaded. Please upload an Excel file to see the data here.</p>
-                </div>
+                <Box sx={noDataImageDivStyle}>
+                    <img src={NoDataImage} alt="No Data" style={noDataImageStyle} />
+                    <Typography sx={noDataImageStyleText}>No data uploaded. Please upload an Excel file to see the data here.</Typography>
+                </Box>
             )}
         </>
     );
@@ -151,10 +152,17 @@ const AddPage = () => {
 
 function UploadedDataTable({ data, isUser, isSchool, isStudent }: { readonly data: any[]; readonly isUser: boolean; readonly isSchool: boolean; readonly isStudent: boolean; }) {
     let schema: any[] = [];
-    if (isUser) schema = userColumns;
-    else if (isSchool) schema = schoolColumns;
-    else if (isStudent) schema = studentColumns;
-    const columns = useMemo<MRT_ColumnDef<any>[]>(() => schema.map((c: any) => ({ accessorKey: c.field, header: c.headerName, size: c.width })), [schema]);
+    if (isUser) schema = UserTableColumns;
+    else if (isSchool) schema = SchoolTableColumns;
+    else if (isStudent) schema = StudentTableColumns;
+    const columns = useMemo<MRT_ColumnDef<any>[]>(() =>
+        schema.map((c: any) => (
+            {
+                accessorKey: c.header,
+                header: c.header,
+                size: c.width
+            }
+        )), [schema]);
 
     const table = useMaterialReactTable({
         columns,

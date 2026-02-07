@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
     MaterialReactTable,
     useMaterialReactTable,
@@ -10,100 +10,139 @@ import Grid from '@mui/material/Grid';
 import ThemedTextField from '../../common/ThemedTextField';
 import ThemedAutocomplete from '../../common/ThemedAutocomplete';
 import ThemedButton from '../../common/ThemedButton';
-
-
-// Student data type
-type Student = {
-    SchoolName: string;
-    ClassName: string;
-    AdmissionNo: string;
-    RollNo: number;
-    StudentName: string;
-};
-
-const data: Student[] = [
-    {
-        SchoolName: 'Greenwood High School',
-        ClassName: '10A',
-        AdmissionNo: 'ADM001',
-        RollNo: 1,
-        StudentName: 'Alice Johnson',
-    },
-    {
-        SchoolName: 'Sunrise Academy',
-        ClassName: '9B',
-        AdmissionNo: 'ADM002',
-        RollNo: 12,
-        StudentName: 'Brian Smith',
-    },
-    {
-        SchoolName: 'Riverdale School',
-        ClassName: '8C',
-        AdmissionNo: 'ADM003',
-        RollNo: 7,
-        StudentName: 'Chloe Martinez',
-    },
-    {
-        SchoolName: 'Hilltop Institute',
-        ClassName: '11A',
-        AdmissionNo: 'ADM004',
-        RollNo: 3,
-        StudentName: 'Daniel Lee',
-    },
-    {
-        SchoolName: 'Lakeside Prep',
-        ClassName: '12B',
-        AdmissionNo: 'ADM005',
-        RollNo: 25,
-        StudentName: 'Emily Davis',
-    },
-];
+import studentServices from '../../services/studentsServices';
+import masterServices from '../../services/masterSerices';
+import type { SchoolModel } from '../../models/SchoolModel';
+import type { StudentModel, GetStudentModel } from '../../models/StudentModel';
+import { StudentTableColumns } from '../../utils/columns';
 
 
 
 export default function StudentsList() {
+    const [students, setStudents] = useState<StudentModel[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
 
-    const defaultProps = {
+    const [schools, setSchools] = useState<SchoolModel[]>([]);
+    const [schoolsLoading, setSchoolsLoading] = useState<boolean>(true);
+
+    const [classes, setClasses] = useState<Array<{ ClassID: number; ClassCode: string }>>([]);
+    const [classesLoading, setClassesLoading] = useState<boolean>(true);
+
+    const [selectedSchool, setSelectedSchool] = useState<SchoolModel | null>(null);
+    const [selectedClass, setSelectedClass] = useState<{ ClassID: number; ClassCode: string } | null>(null);
+
+    const getStudentsListAPI = async () => {
+        const payload: GetStudentModel = {
+            Prefix: '',
+            StudentID: 0,
+            ClassID: 0,
+            SchoolID: 0,
+            AccountID: 2,
+            IsDropdown: false,
+            LoginUserID: 2,
+        };
+        try {
+            const res: any = await studentServices.getStudentsList(payload);
+            setTimeout(() => {
+                setLoading(false);
+                setStudents(res?.data?.Result ?? []);
+            }, 1000);
+        } catch (err: any) {
+            console.error(err?.message ?? err);
+            setLoading(false);
+            alert(err?.message ?? 'Failed to fetch account details');
+        }
+    }
+
+    useEffect(() => {
+        getStudentsListAPI();
+        getSchoolsAPI();
+        getClassesAPI(0); // load all classes initially
+    }, []);
+
+    const getSchoolsAPI = async () => {
+        try {
+            const res: any = await masterServices.getSchoolsByAccountID(2);
+            setTimeout(() => {
+                setSchoolsLoading(false);
+                const data = res?.data?.Result ?? [];
+                setSchools(data);
+            }, 1000);
+        } catch (err: any) {
+            console.error(err?.message ?? err);
+            setSchoolsLoading(false);
+            alert(err?.message ?? 'Failed to fetch schools');
+        }
+    };
+
+    const getClassesAPI = async (schoolID: number) => {
+        setClassesLoading(true);
+        try {
+            const res: any = await masterServices.getClassesBySchoolID(2, schoolID);
+            setTimeout(() => {
+                const studentsForDropdown: StudentModel[] = res?.data?.Result ?? [];
+                const map = new Map<number, { ClassID: number; ClassCode: string; IsActive: boolean }>();
+                debugger
+                studentsForDropdown.forEach((s) => {
+                    if (s.ClassID && s.ClassCode && !map.has(s.ClassID) && s.IsActive) {
+                        map.set(s.ClassID, { ClassID: s.ClassID, ClassCode: s.ClassCode, IsActive: s.IsActive });
+                    }
+                });
+                setClasses(Array.from(map.values()));
+                setClassesLoading(false);
+            }, 500);
+        } catch (err: any) {
+            console.error(err?.message ?? err);
+            setClassesLoading(false);
+            alert(err?.message ?? 'Failed to fetch classes');
+        }
+    };
+
+    const movieProps = {
         options: top100Films,
         getOptionLabel: (option: FilmOptionType) => option.title,
     };
+
+    const schoolProps = {
+        options: schools,
+        getOptionLabel: (option: SchoolModel) => option.SchoolName,
+        loading: schoolsLoading,
+        value: selectedSchool,
+        onChange: (_: any, newValue: SchoolModel | null) => {
+            setSelectedSchool(newValue);
+            setSelectedClass(null);
+            getClassesAPI(newValue?.SchoolID ?? 0);
+        },
+    };
+
+    const classProps = {
+        options: classes,
+        getOptionLabel: (option: { ClassID: number; ClassCode: string }) => option.ClassCode,
+        loading: classesLoading,
+        value: selectedClass,
+        onChange: (_: any, newValue: { ClassID: number; ClassCode: string } | null) => {
+            setSelectedClass(newValue);
+        },
+    };
     // local state for future enhancements (filters) - currently unused
 
-    const columns = useMemo<MRT_ColumnDef<Student>[]>(
-        () => [
-            {
-                accessorKey: 'SchoolName',
-                header: 'School',
-                size: 240,
-            },
-            {
-                accessorKey: 'ClassName',
-                header: 'Class',
-                size: 140,
-            },
-            {
-                accessorKey: 'AdmissionNo',
-                header: 'Admission No.',
-                size: 160,
-            },
-            {
-                accessorKey: 'RollNo',
-                header: 'Roll No.',
-                size: 100,
-            },
-            {
-                accessorKey: 'StudentName',
-                header: 'Student Name',
-                size: 240,
-            },
-        ],
+
+    const columns = useMemo<MRT_ColumnDef<StudentModel>[]>(
+        () =>
+            StudentTableColumns.map(column => {
+                return column;
+            }),
         [],
     );
 
 
     const table = useMaterialReactTable({
         columns,
-        data,
+        data: students,
+        state: {
+            isLoading: loading,
+            showLoadingOverlay: false,
+        },
         ...(getTableOptions() as any),
     });
 
@@ -112,16 +151,16 @@ export default function StudentsList() {
         <Grid container spacing={2} sx={{ p: 2 }}>
             <Grid size={2}>
                 <ThemedAutocomplete
-                    {...defaultProps}
-                    id="disable-close-on-select"
+                    {...schoolProps}
+                    id="school-select"
                     disableCloseOnSelect
                     label="School"
                 />
             </Grid>
             <Grid size={2}>
                 <ThemedAutocomplete
-                    {...defaultProps}
-                    id="disable-close-on-select"
+                    {...classProps}
+                    id="class-select"
                     disableCloseOnSelect
                     label="Class"
                 />

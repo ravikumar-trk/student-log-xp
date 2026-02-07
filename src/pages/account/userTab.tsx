@@ -7,7 +7,7 @@ import {
 import { getTableOptions } from '../../common/tableStyles';
 import Chip from '../../common/chip';
 import type { UserModel } from '../../models/UserModel';
-import { UserTableColumns } from './utils'
+import { UserTableColumns } from '../../utils/columns'
 import masterServices from '../../services/masterSerices';
 
 const UserTab = () => {
@@ -35,7 +35,7 @@ const UserTab = () => {
             const res: any = await masterServices.getUsersByAccountID(2);
             setTimeout(() => {
                 setLoading(false);
-                setUsers(res?.data?.Data ?? []);
+                setUsers(res?.data?.Result ?? []);
             }, 1000);
         } catch (err: any) {
             console.error(err?.message ?? err);

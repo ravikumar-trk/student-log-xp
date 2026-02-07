@@ -8,7 +8,7 @@ import { getTableOptions } from '../../common/tableStyles';
 import Chip from '../../common/chip';
 import masterServices from '../../services/masterSerices';
 import type { SchoolModel } from '../../models/SchoolModel';
-import { SchoolTableColumns } from './utils'
+import { SchoolTableColumns } from '../../utils/columns'
 
 const SchoolTab = () => {
     const [schools, setSchools] = useState<SchoolModel[]>([]);
@@ -35,7 +35,7 @@ const SchoolTab = () => {
             const res: any = await masterServices.getSchoolsByAccountID(2);
             setTimeout(() => {
                 setLoading(false);
-                setSchools(res?.data?.Data ?? []);
+                setSchools(res?.data?.Result ?? []);
             }, 1000);
         } catch (err: any) {
             console.error(err?.message ?? err);

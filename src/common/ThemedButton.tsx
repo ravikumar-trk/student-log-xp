@@ -2,7 +2,6 @@ import React from 'react';
 import Button from '@mui/material/Button';
 import type { ButtonProps } from '@mui/material/Button';
 import { useAppSelector } from '../hooks/reduxHooks';
-// icons reused from chip component for consistent behavior
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CheckIcon from '@mui/icons-material/Check';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -23,42 +22,37 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 type ThemedButtonProps = ButtonProps & {
-    // allow an optional invert prop to invert colors (outline-like)
     invert?: boolean;
     text: string;
-    // optional icon (React node) or a string key that will be resolved to a predefined icon
     icon?: React.ReactNode | string;
-    isFile?: boolean
-    // optional position of the icon
+    isFile?: boolean;
     iconPosition?: 'start' | 'end';
-    // handleClick can optionally receive files when isFile=true
     handleClick?: (files?: FileList | null) => void;
-    // optional accept string for file input (e.g. '.xlsx,.xls')
     accept?: string;
 };
 
-const ThemedButton: React.FC<ThemedButtonProps> = ({ style, text, variant, icon, iconPosition = 'start', children, isFile, handleClick, accept = '.xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel', ...rest }) => {
+const ThemedButton: React.FC<ThemedButtonProps> = ({
+    style,
+    text,
+    variant,
+    icon,
+    iconPosition = 'start',
+    children,
+    isFile,
+    handleClick,
+    accept = '.xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel',
+    ...rest
+}) => {
+
     const primaryColor = useAppSelector((s) => s.theme.primaryColor);
+    const mode = useAppSelector((s) => s.theme.mode);
+    const isDark = mode === 'dark';
     const inputRef = React.useRef<HTMLInputElement | null>(null);
 
     const containedBtnStyle: React.CSSProperties = {
         backgroundColor: primaryColor.color,
         color: '#fff',
         border: `1px solid ${primaryColor.color}`,
-        // boxShadow: 'none',
-        textTransform: 'none',
-        padding: '6px 24px',
-        borderRadius: 6,
-        height: '45px',
-        fontSize: '16px',
-        letterSpacing: '.5px',
-        ...(style || {}),
-    };
-    const outlinedBtnStyle: React.CSSProperties = {
-        backgroundColor: 'transparent',
-        color: primaryColor.color,
-        border: `1px solid ${primaryColor.color}`,
-        // boxShadow: 'none',
         textTransform: 'none',
         padding: '6px 24px',
         borderRadius: 6,
@@ -68,13 +62,24 @@ const ThemedButton: React.FC<ThemedButtonProps> = ({ style, text, variant, icon,
         ...(style || {}),
     };
 
-    // resolve icon if user provided a string key
+    const outlinedBtnStyle: React.CSSProperties = {
+        backgroundColor: 'transparent',
+        color: primaryColor.color,
+        border: `1px solid ${primaryColor.color}`,
+        textTransform: 'none',
+        padding: '6px 24px',
+        borderRadius: 6,
+        height: '45px',
+        fontSize: '16px',
+        letterSpacing: '.5px',
+        ...(style || {}),
+    };
+
     const resolveIcon = (ik: React.ReactNode | string | undefined) => {
         if (!ik) return null;
         if (typeof ik !== 'string') return ik;
         const key = ik.trim();
         const map: Record<string, React.ElementType> = {
-            // status-like keys (similar to chip)
             Active: CheckIcon,
             Open: AccessTimeIcon,
             Inactive: FiberManualRecordIcon,
@@ -83,7 +88,6 @@ const ThemedButton: React.FC<ThemedButtonProps> = ({ style, text, variant, icon,
             Approved: CheckCircleOutlineIcon,
             Completed: CheckCircleOutlineIcon,
             'In Progress': AccessTimeIcon,
-            // simple aliases
             check: CheckIcon,
             checkCircle: CheckCircleOutlineIcon,
             time: AccessTimeIcon,
@@ -101,7 +105,6 @@ const ThemedButton: React.FC<ThemedButtonProps> = ({ style, text, variant, icon,
 
     const onButtonClick = () => {
         if (isFile) {
-            // trigger hidden input click
             inputRef.current?.click();
         } else {
             handleClick?.();
@@ -114,16 +117,51 @@ const ThemedButton: React.FC<ThemedButtonProps> = ({ style, text, variant, icon,
     };
 
     return (
-        <Button style={variant === 'contained' ? containedBtnStyle : outlinedBtnStyle} onClick={onButtonClick} {...rest}>
-            {IconNodeBefore && <span style={{ display: 'inline-flex', marginRight: 8, alignItems: 'center' }}>{IconNodeBefore}</span>}
+        <Button
+            sx={{
+                ...(variant === 'contained' ? containedBtnStyle : outlinedBtnStyle),
+
+                transition: 'all 0.2s ease',
+
+                '&:hover': {
+                    backgroundColor:
+                        variant === 'contained'
+                            ? `${primaryColor.color}E6`
+                            : `${primaryColor.color}15`,
+                    borderColor: primaryColor.color,
+                },
+                '&.Mui-disabled': {
+                    pointerEvents: 'unset',
+                    cursor: 'not-allowed !important',
+                    color: isDark ? '#555 !important' : '#000 !important',
+                    // opacity: 0.6,
+                },
+            }}
+            onClick={onButtonClick}
+            {...rest}
+        >
+            {IconNodeBefore && (
+                <span style={{ display: 'inline-flex', marginRight: 8, alignItems: 'center' }}>
+                    {IconNodeBefore}
+                </span>
+            )}
+
             {text}
-            {IconNodeAfter && <span style={{ display: 'inline-flex', marginLeft: 8, alignItems: 'center' }}>{IconNodeAfter}</span>}
-            {isFile && <VisuallyHiddenInput
-                ref={inputRef}
-                type="file"
-                accept={accept}
-                onChange={onInputChange}
-            />}
+
+            {IconNodeAfter && (
+                <span style={{ display: 'inline-flex', marginLeft: 8, alignItems: 'center' }}>
+                    {IconNodeAfter}
+                </span>
+            )}
+
+            {isFile && (
+                <VisuallyHiddenInput
+                    ref={inputRef}
+                    type="file"
+                    accept={accept}
+                    onChange={onInputChange}
+                />
+            )}
         </Button>
     );
 };

@@ -310,7 +310,7 @@ export function useStyles() {
       },
 
       // ticket details styles
-      ticketDetailsTitle: {
+      pageDetailsTitle: {
         margin: 0,
         fontWeight: 500,
         fontSize: "1.25rem",
@@ -379,6 +379,116 @@ export function useStyles() {
           borderTop: `1px solid ${isDark ? darkModeTextColor : borderColor}`,
           borderBottom: `1px solid ${isDark ? darkModeTextColor : borderColor}`,
         },
+      },
+
+      // settings dashboard styles
+      settingsCards: {
+        backgroundColor: isDark ? darkBackgroundColor : "#fff",
+        borderRadius: "8px",
+        boxShadow: isDark
+          ? "rgb(255 255 255 / 10%) 0px 2px 12px 4px"
+          : isDefaultSkin
+          ? "0 2px 12px rgba(0, 0, 0, 0.1)"
+          : "none",
+        margin: "0 auto",
+        border: isDefaultSkin ? "none" : `1px solid ${borderColor}`,
+        padding: "24px 16px",
+        cursor: "pointer",
+        display: "flex",
+        justifyContent: "space-between",
+        height: "100%",
+        transition: "border-left 0.1s",
+        "&:hover": {
+          borderLeft: `6px solid ${primaryColor.color}`,
+          transition: "border-left 0.1s",
+        },
+        // change paragraph color when the card is hovered
+      },
+      settingsCardItemStyle: {
+        color: isDark ? darkModeTextColor : "#000",
+        fontWeight: 400,
+        letterSpacing: "0.5px",
+        marginTop: 0,
+        marginBottom: "0px",
+      },
+      // settings dashboard icon styles
+      settingsCardIconStyle: {
+        color: isDark ? darkModeTextColor : "#000",
+        fontWeight: 400,
+        letterSpacing: "0.5px",
+        marginTop: 0,
+        marginBottom: "0px",
+      },
+
+      // Configure classes styles
+      configureClassesBox: {
+        p: 2,
+      },
+      configureSchoolGrid: {
+        // keeps the school selector visually aligned
+        display: "flex",
+        alignItems: "center",
+      },
+      configureControlContainer: {
+        display: "flex",
+        justifyContent: "flex-end",
+        alignItems: "center",
+      },
+      groupCard: {
+        border: `1px solid ${borderColor}`,
+        borderRadius: 2,
+        p: 2,
+        height: "100%",
+        backgroundColor: isDark ? darkBackgroundColor : "#fff",
+      },
+      parentTitle: {
+        fontWeight: 600,
+        fontSize: "1rem",
+        color: isDark ? darkModeTextColor : "#000",
+      },
+      parentCode: {
+        color: isDark ? darkModeTextColor : "#666",
+      },
+      childListItem: {
+        cursor: "pointer",
+        "&:hover": {
+          color: `${primaryColor.color} !important`,
+        },
+        "& .MuiListItemText-primary": {
+          color: isDark ? darkModeTextColor : "#000",
+        },
+      },
+      emptyMessage: {
+        p: 2,
+        color: isDark ? darkModeTextColor : "#888",
+      }, // small action button used by Select All / Clear
+      configureClassActionButton: {
+        textTransform: "none",
+        // border: `1px solid ${primaryColor.color}`,
+        color: `${isDark ? darkModeTextColor : "#000"} !important`,
+        padding: "6px 16px",
+        borderRadius: 6,
+        minHeight: 36,
+        backgroundColor: "transparent",
+        "&:hover": {
+          backgroundColor: `${primaryColor.lightColor} !important`,
+        },
+      },
+
+      // No data image styles
+      noDataImageDivStyle: {
+        textAlign: "center",
+        marginTop: "50px",
+        paddingBottom: "16px",
+      },
+      // style={{ width: 150, opacity: 0.5 }}
+      noDataImageStyle: {
+        width: 150,
+        opacity: 0.5,
+      },
+      noDataImageStyleText: {
+        color: isDark ? darkModeTextColor : "#888",
+        fontSize: 18,
       },
     };
   }, [primaryColor, mode, skin]);

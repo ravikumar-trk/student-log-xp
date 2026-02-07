@@ -13,13 +13,13 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import Chip from '../../common/chip';
 
 export default function ticketDetails() {
-    const { m_0, flexCenter, verticalCenter, ticketDetailsTitle, trackerIconStyle, displayTitle, displayValue } = useStyles();
+    const { m_0, flexCenter, verticalCenter, pageDetailsTitle, trackerIconStyle, displayTitle, displayValue } = useStyles();
 
     return (
         <>
             <Grid container spacing={2} sx={{ p: 2 }} >
                 <Grid size={12}>
-                    <h3 style={ticketDetailsTitle}>Login failure for user - TCK-001</h3>
+                    <h3 style={pageDetailsTitle}>Login failure for user - TCK-001</h3>
                 </Grid>
             </Grid>
             <Grid container spacing={2} sx={{ p: '0px 16px' }} >
@@ -32,7 +32,7 @@ export default function ticketDetails() {
                     <CheckCircleOutlineIcon style={trackerIconStyle} />
                 </Grid>
                 <Grid size={11} style={verticalCenter}>
-                    <h3 style={ticketDetailsTitle}>Request Ticket Details</h3>
+                    <h3 style={pageDetailsTitle}>Request Ticket Details</h3>
                 </Grid>
                 <Grid size={1}>
                 </Grid>
@@ -114,7 +114,7 @@ export default function ticketDetails() {
                     <CheckCircleOutlineIcon style={trackerIconStyle} />
                 </Grid>
                 <Grid size={11} style={verticalCenter}>
-                    <h3 style={ticketDetailsTitle}>Admin Review</h3>
+                    <h3 style={pageDetailsTitle}>Admin Review</h3>
                 </Grid>
                 <Grid size={1}>
                 </Grid>
@@ -178,7 +178,7 @@ export default function ticketDetails() {
                     <CheckCircleOutlineIcon style={trackerIconStyle} />
                 </Grid>
                 <Grid size={11} style={verticalCenter}>
-                    <h3 style={ticketDetailsTitle}>Final Status</h3>
+                    <h3 style={pageDetailsTitle}>Final Status</h3>
                 </Grid>
                 <Grid size={1}>
                 </Grid>

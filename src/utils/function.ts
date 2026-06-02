@@ -7,7 +7,7 @@
 import moment from "moment";
 
 export const formatDateTime = (
-  input?: Date | string | number | null
+  input?: Date | string | number | null,
 ): string => {
   if (input === null || input === undefined || input === "") return "";
 
@@ -15,4 +15,13 @@ export const formatDateTime = (
   if (!m.isValid()) return "";
 
   return m.format("DD-MMM-YYYY hh:mm:ss a");
+};
+
+export const fileNameWithTimestamp = (
+  prefix: string,
+  extension: string,
+): string => {
+  const now = new Date();
+  const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}_${String(now.getHours()).padStart(2, "0")}${String(now.getMinutes()).padStart(2, "0")}${String(now.getSeconds()).padStart(2, "0")}`;
+  return `${prefix}_${timestamp}.${extension}`;
 };

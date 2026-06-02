@@ -323,8 +323,8 @@ export function useStyles() {
         boxShadow: isDark
           ? "rgb(255 255 255 / 10%) 0px 2px 12px 4px"
           : isDefaultSkin
-          ? "0 2px 12px rgba(0, 0, 0, 0.1)"
-          : "none",
+            ? "0 2px 12px rgba(0, 0, 0, 0.1)"
+            : "none",
         margin: "0 auto",
         border: isDefaultSkin ? "none" : `1px solid ${borderColor}`,
         padding: "16px",
@@ -388,8 +388,8 @@ export function useStyles() {
         boxShadow: isDark
           ? "rgb(255 255 255 / 10%) 0px 2px 12px 4px"
           : isDefaultSkin
-          ? "0 2px 12px rgba(0, 0, 0, 0.1)"
-          : "none",
+            ? "0 2px 12px rgba(0, 0, 0, 0.1)"
+            : "none",
         margin: "0 auto",
         border: isDefaultSkin ? "none" : `1px solid ${borderColor}`,
         padding: "24px 16px",

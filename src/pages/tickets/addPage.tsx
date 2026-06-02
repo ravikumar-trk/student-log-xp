@@ -109,7 +109,17 @@ const AddPage = () => {
                 // Convert sheet to JSON (array of objects using header row)
                 const json = XLSX.utils.sheet_to_json(ws, { defval: null });
                 console.log('Uploaded Excel parsed JSON:', json);
-                setUploadedData(json as any[]);
+                var updatedData = json;
+                // if (isAddStudent) {
+                //     updatedData = json?.map(
+                //         ({ ["Admission No."]: AdmissionNo, ["Roll No."]: RollNo, ...rest }: any) => ({
+                //             ...rest,
+                //             AdmissionNo,
+                //             RollNo
+                //         })
+                //     );
+                // }
+                setUploadedData(updatedData);
             } catch (err) {
                 console.error('Error parsing Excel file', err);
             }

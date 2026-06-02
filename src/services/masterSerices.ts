@@ -10,9 +10,11 @@ import {
 const masterServices = {
   // Get account details
   async getAccountDetails(accountID: number): Promise<any> {
-    const response = await axiosClient.get(
-      `${GET_ACCOUNT_DETAILS}/${accountID}`
+    const url = GET_ACCOUNT_DETAILS.replace(
+      "{accountId}",
+      accountID.toString(),
     );
+    const response = await axiosClient.get(url);
     return response;
   },
 
@@ -23,26 +25,32 @@ const masterServices = {
   },
 
   async getSchoolsByAccountID(accountID: number): Promise<any> {
-    const response = await axiosClient.get(
-      `${GET_SCHOOLS_BY_ACCOUNT_ID}/${accountID}`
+    const url = GET_SCHOOLS_BY_ACCOUNT_ID.replace(
+      "{accountId}",
+      accountID.toString(),
     );
+    const response = await axiosClient.get(url);
     return response;
   },
 
   async getUsersByAccountID(accountID: number): Promise<any> {
-    const response = await axiosClient.get(
-      `${GET_USERS_BY_ACCOUNT_ID}/${accountID}`
+    const url = GET_USERS_BY_ACCOUNT_ID.replace(
+      "{accountId}",
+      accountID.toString(),
     );
+    const response = await axiosClient.get(url);
     return response;
   },
 
   async getClassesBySchoolID(
     accountID: number,
-    schoolID: number
+    schoolID: number,
   ): Promise<any> {
-    const response = await axiosClient.get(
-      `${GET_CLASSES_BY_SCHOOL_ID}?AccountID=${accountID}&SchoolID=${schoolID}`
-    );
+    const url = GET_CLASSES_BY_SCHOOL_ID.replace(
+      "{accountId}",
+      accountID.toString(),
+    ).replace("{schoolId}", schoolID.toString());
+    const response = await axiosClient.get(url);
     return response;
   },
 

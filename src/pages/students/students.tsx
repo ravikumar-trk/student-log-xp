@@ -98,11 +98,6 @@ export default function StudentsList() {
         }
     };
 
-    const movieProps = {
-        options: top100Films,
-        getOptionLabel: (option: FilmOptionType) => option.title,
-    };
-
     const schoolProps = {
         options: schools,
         getOptionLabel: (option: SchoolModel) => option.SchoolName,

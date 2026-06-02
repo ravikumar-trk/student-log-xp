@@ -79,13 +79,13 @@ export const StudentTableColumns = [
   },
   {
     accessorKey: "AdmissionNo",
-    header: "Admission No.",
+    header: "Admission No",
     size: 160,
     excelIgnore: false,
   },
   {
     accessorKey: "RollNo",
-    header: "Roll No.",
+    header: "Roll No",
     size: 100,
     excelIgnore: false,
   },

@@ -1,10 +1,6 @@
 import { Suspense, lazy } from 'react';
 import { useStyles } from '../theme/styles';
 import { Routes, Route } from 'react-router-dom';
-import SettingsDashboard from '../pages/settings/settingsdashboard';
-import ConfigureClasses from '../pages/settings/configureClasses';
-import HolidaysList from '../pages/settings/holidaysList';
-import UploadPage from '../pages/tickets/uploadPage';
 
 const AccountDashboard = lazy(() => import('../pages/account/accountDashboard'));
 const StudentsList = lazy(() => import('../pages/students/students'));
@@ -13,6 +9,10 @@ const TicketDetails = lazy(() => import('../pages/tickets/ticketDetails'));
 const NewTicket = lazy(() => import('../pages/tickets/newTicket'));
 const AddPage = lazy(() => import('../pages/tickets/addPage'));
 const EditPage = lazy(() => import('../pages/tickets/editPage'));
+const UploadPage = lazy(() => import('../pages/tickets/uploadPage'));
+const HolidaysList = lazy(() => import('../pages/settings/holidaysList'));
+const ConfigureClasses = lazy(() => import('../pages/settings/configureClasses'));
+const SettingsDashboard = lazy(() => import('../pages/settings/settingsdashboard'));
 
 const RouterPage = () => {
     const { bodyMainDiv, bodySubMainDiv } = useStyles();

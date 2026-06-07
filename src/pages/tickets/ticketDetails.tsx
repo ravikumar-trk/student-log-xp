@@ -11,9 +11,44 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CommentIcon from '@mui/icons-material/Comment';
 import DescriptionIcon from '@mui/icons-material/Description';
 import Chip from '../../common/chip';
+import { useLocation, useNavigate } from "react-router-dom";
+import ticketsSerices from "../../services/ticketsSerices";
+import { useEffect, useState } from 'react';
+import RoutePaths from '../../utils/routes';
 
 export default function ticketDetails() {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const ticket = location?.state?.ticket;
     const { m_0, flexCenter, verticalCenter, pageDetailsTitle, trackerIconStyle, displayTitle, displayValue } = useStyles();
+    const [ticketDetails, setTicketDetails] = useState<any>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (!location.state?.ticket) {
+            navigate(RoutePaths.TicketsList, { replace: true });
+        }
+    }, [location.state, navigate]);
+
+    const fetchTicketDetails = async () => {
+        try {
+            const response = await ticketsSerices.getTicketDetails(ticket.TicketID);
+            console.log('Fetched ticket details:', response);
+            setLoading(false);
+            setTicketDetails(response?.data?.Result[0] ?? []);
+        }
+        catch (err: any) {
+            console.error('Error fetching ticket details:', err?.message ?? err);
+            setLoading(false);
+            alert(err?.message ?? 'Failed to fetch ticket details');
+        }
+    }
+
+    useEffect(() => {
+        if (ticket?.TicketID) {
+            fetchTicketDetails();
+        }
+    }, [ticket]);
 
     return (
         <>
@@ -43,7 +78,7 @@ export default function ticketDetails() {
                                 <BusinessIcon style={trackerIconStyle} />
                                 <div>
                                     <div style={displayTitle}>School</div>
-                                    <div style={displayValue}>Greenwood High School</div>
+                                    <div style={displayValue}>{ticketDetails?.SchoolName}</div>
                                 </div>
                             </div>
                         </Grid>
@@ -52,7 +87,7 @@ export default function ticketDetails() {
                                 <PriorityHighIcon style={trackerIconStyle} />
                                 <div>
                                     <div style={displayTitle}>Priority</div>
-                                    <div style={displayValue}><Chip status="Critical" /></div>
+                                    <div style={displayValue}><Chip status={ticketDetails?.Priority} /></div>
                                 </div>
                             </div>
                         </Grid>
@@ -61,7 +96,7 @@ export default function ticketDetails() {
                                 <BusinessIcon style={trackerIconStyle} />
                                 <div>
                                     <div style={displayTitle}>Status</div>
-                                    <div style={displayValue}><Chip status="Reviewed" /></div>
+                                    <div style={displayValue}><Chip status={ticketDetails?.Status} /></div>
                                 </div>
                             </div>
                         </Grid>
@@ -70,7 +105,7 @@ export default function ticketDetails() {
                                 <PersonIcon style={trackerIconStyle} />
                                 <div>
                                     <div style={displayTitle}>Requested By</div>
-                                    <div style={displayValue}>Ravi Kumar</div>
+                                    <div style={displayValue}>{ticketDetails?.CreatedByName}</div>
                                 </div>
                             </div>
                         </Grid>
@@ -79,7 +114,7 @@ export default function ticketDetails() {
                                 <AccessTimeFilledIcon style={trackerIconStyle} />
                                 <div>
                                     <div style={displayTitle}>Requested On</div>
-                                    <div style={displayValue}>2025-10-06</div>
+                                    <div style={displayValue}>{ticketDetails?.CreatedOn}</div>
                                 </div>
                             </div>
                         </Grid>
@@ -88,7 +123,7 @@ export default function ticketDetails() {
                                 <EmailIcon style={trackerIconStyle} />
                                 <div>
                                     <div style={displayTitle}>Requested User Email</div>
-                                    <div style={displayValue}>ravi.kumar@example.com</div>
+                                    <div style={displayValue}>{ticketDetails?.CreatedByUserEmail}</div>
                                 </div>
                             </div>
                         </Grid>

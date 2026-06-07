@@ -1,3 +1,4 @@
+const TicketsList = "/tickets";
 const AddUser = "/tickets/addUser";
 const AddSchool = "/tickets/addSchool";
 const AddStudent = "/tickets/addStudent";
@@ -9,6 +10,7 @@ const UploadExcel = "/tickets/uploadExcel";
 
 const ConfigureClasses = "/settings/configureClasses";
 const Holidays = "/settings/holidays";
+const TicketDetails = "/ticket-details";
 
 const RoutePaths = {
   AddUser,
@@ -22,5 +24,7 @@ const RoutePaths = {
 
   ConfigureClasses,
   Holidays,
+  TicketsList, 
+  TicketDetails,
 };
 export default RoutePaths;

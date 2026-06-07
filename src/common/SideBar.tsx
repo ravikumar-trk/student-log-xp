@@ -16,12 +16,39 @@ const SideBar: React.FC = () => {
     const primaryColor = useAppSelector((state) => state.theme.primaryColor);
     const { sidebarStyles, getTextColor } = useStyles();
     const menuItems = [
-        { text: 'Dashboard', icon: <DashboardIcon /> },
-        { text: 'Account', icon: <AccountCircleIcon /> },
-        { text: 'Students', icon: <SchoolIcon /> },
-        { text: 'Tickets', icon: <FactCheckIcon /> },
-        { text: 'Reports', icon: <SummarizeIcon /> },
-        { text: 'Settings', icon: <SettingsIcon /> },
+        { page: 'Dashboard', icon: <DashboardIcon /> },
+        {
+            page: 'Account', icon: <AccountCircleIcon />,
+            pages: [
+                { text: 'Account', path: '/account' },
+            ]
+        },
+        {
+            page: 'Students', icon: <SchoolIcon />,
+            pages: [
+                { text: 'Students List', path: '/students' },
+            ]
+        },
+        {
+            page: 'Tickets', icon: <FactCheckIcon />,
+            pages: [
+                { text: 'Ticket List', path: '/tickets' },
+                { text: 'New Ticket', path: '/tickets/new' },
+                { text: 'Ticket Details', path: '/ticket-details' },
+            ]
+        },
+        {
+            page: 'Reports', icon: <SummarizeIcon />,
+            pages: [
+                { text: 'Reports', path: '/reports' },
+            ]
+        },
+        {
+            page: 'Settings', icon: <SettingsIcon />,
+            pages: [
+                { text: 'Settings', path: '/settings' },
+            ]
+        },
     ];
     const [selected, setSelected] = useState('Dashboard');
 
@@ -29,11 +56,19 @@ const SideBar: React.FC = () => {
         setSelected(text);
         navigate(`/${text.toLowerCase()}`);
     }
+
+    const getCurrentPage = (pathname: string) => {
+        return (
+            menuItems.find(menu =>
+                menu.pages?.some(page => page.path === pathname)
+            )?.page || ""
+        );
+    };
+
     useEffect(() => {
-        const path = location.pathname.split('/')[1];
-        const currentItem = menuItems.find(item => item.text.toLowerCase() === path);
-        if (currentItem) {
-            setSelected(currentItem.text);
+        const currentPage = getCurrentPage(location.pathname);
+        if (currentPage) {
+            setSelected(currentPage);
         } else {
             setSelected('Dashboard');
         }
@@ -42,19 +77,19 @@ const SideBar: React.FC = () => {
     return (
         <Box sx={sidebarStyles}>
             <List sx={{ p: 0 }}>
-                {menuItems.map(({ text, icon }) => (
-                    <ListItem key={text} disablePadding sx={selected === text ? { backgroundColor: primaryColor.lightColor } : {}}>
+                {menuItems.map(({ page, icon }) => (
+                    <ListItem key={page} disablePadding sx={selected === page ? { backgroundColor: primaryColor.lightColor } : {}}>
                         <ListItemButton
-                            selected={selected === text}
-                            onClick={() => navigateTo(text)}
-                            sx={selected === text ? {
+                            selected={selected === page}
+                            onClick={() => navigateTo(page)}
+                            sx={selected === page ? {
                                 '& .MuiListItemIcon-root': { color: '#fff' },
                                 '&:hover': { backgroundColor: primaryColor.color },
                             } : {}}
                         >
                             <ListItemIcon
                                 style={{
-                                    color: getTextColor(selected === text),
+                                    color: getTextColor(selected === page),
                                     minWidth: '45px',
                                 }}
                             >
@@ -62,11 +97,11 @@ const SideBar: React.FC = () => {
                             </ListItemIcon>
                             <ListItemText
                                 sx={{
-                                    color: getTextColor(selected === text),
+                                    color: getTextColor(selected === page),
                                     fontSize: '20px !important',
                                     fontWeight: '600 !important',
                                 }}
-                                primary={text}
+                                primary={page}
                             />
                         </ListItemButton>
                     </ListItem>

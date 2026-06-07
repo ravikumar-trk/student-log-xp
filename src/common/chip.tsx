@@ -39,6 +39,7 @@ const planStyles: Record<string, StyleAndIcon> = {
     Critical: { style: { color: '#c62828', fontSize: '16px' }, Icon: null },
     High: { style: { color: '#ef6c00', fontSize: '16px' }, Icon: null },
     Medium: { style: { color: '#f9a825', fontSize: '16px' }, Icon: null },
+    medium: { style: { color: '#f9a825', fontSize: '16px' }, Icon: null },
     Low: { style: { color: '#2e7d32', fontSize: '16px' }, Icon: null },
 };
 
@@ -51,6 +52,7 @@ const statusStyles: Record<string, StyleAndIcon> = {
     Approved: { style: { backgroundColor: '#d4edda', color: '#155724', padding: '4px 8px' }, Icon: CheckCircleOutlineIcon },
     Completed: { style: { backgroundColor: '#c3e6cb', color: '#155724', padding: '4px 8px' }, Icon: CheckCircleOutlineIcon },
     'In Progress': { style: { backgroundColor: '#fff3cd', color: '#856404', padding: '4px 8px' }, Icon: AccessTimeIcon },
+    New: { style: { backgroundColor: '#cce5ff', color: '#004085', padding: '4px 8px' }, Icon: AccessTimeIcon },
 };
 
 function pickPlanStyle(normalized: string): StyleAndIcon | null {

@@ -25,7 +25,7 @@ const RouterPage = () => {
                         <Route path="/account" element={<AccountDashboard />} />
                         <Route path="/students" element={<StudentsList />} />
                         <Route path="/tickets" element={<TicketsList />} />
-                        <Route path="/tickets/:id" element={<TicketDetails />} />
+                        <Route path="/ticket-details" element={<TicketDetails />} />
                         <Route path="/tickets/new" element={<NewTicket />} />
                         <Route path="/tickets/addUser" element={<AddPage />} />
                         <Route path="/tickets/addSchool" element={<AddPage />} />

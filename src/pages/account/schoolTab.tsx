@@ -4,7 +4,7 @@ import {
     useMaterialReactTable,
     type MRT_ColumnDef,
 } from 'material-react-table';
-import { getTableOptions } from '../../common/tableStyles';
+import { GetTableOptions } from '../../common/tableStyles';
 import Chip from '../../common/chip';
 import masterServices from '../../services/masterSerices';
 import type { SchoolModel } from '../../models/SchoolModel';
@@ -56,7 +56,7 @@ const SchoolTab = () => {
             isLoading: loading,
             showLoadingOverlay: false,
         },
-        ...getTableOptions(),
+        ...GetTableOptions(),
     });
 
 

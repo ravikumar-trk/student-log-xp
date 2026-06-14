@@ -285,6 +285,8 @@ export function useStyles() {
       },
       tableToolBarStyles: {
         backgroundColor: isDark ? darkModeTableRowColor : "#fff",
+        borderBottom: `1px solid ${borderColor}`,
+        borderTop: `1px solid ${borderColor}`,
         color: isDark ? darkModeTextColor : "#000",
         "& label": { color: isDark ? darkModeTextColor : "#000" },
         "& .MuiSelect-select": { color: isDark ? darkModeTextColor : "#000" },
@@ -293,6 +295,12 @@ export function useStyles() {
         "& .MuiInputBase-formControl": {
           border: `1px solid ${isDark ? darkModeTextColor : "none"}`,
         },
+      },
+      tableTopToolBarStyles: {
+        borderBottom: `1px solid ${borderColor}`,
+        borderTop: `1px solid ${borderColor}`,
+        display: "flex",
+        alignItems: "center",
       },
       muiTableBodyRowProps: (row: any) => {
         if (isDark) {
@@ -307,6 +315,18 @@ export function useStyles() {
               row.index % 2 === 0 ? "#fff" : tableStripedRowColor,
           };
         }
+      },
+
+      // Ticket List
+      ticketListTextStyle: {
+        color: primaryColor.color,
+        fontSize: 18,
+        marginLeft: 8,
+      },
+      ticketListIconStyle: {
+        color: primaryColor.color,
+        fontSize: 22,
+        marginRight: 4,
       },
 
       // ticket details styles

@@ -1,9 +1,10 @@
 import axiosClient from "./axiosClient";
+import { LOGIN_API } from "./constants";
 
-export const getUsers = () => {
-  return axiosClient.get("/users");
+const authServices = {
+  async login(credentials: any): Promise<any> {
+    const response = await axiosClient.post(LOGIN_API, credentials);
+    return response;
+  },
 };
-
-export const createUser = (payload: any) => {
-  return axiosClient.post("/users", payload);
-};
+export default authServices;

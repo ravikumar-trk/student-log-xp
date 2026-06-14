@@ -8,7 +8,7 @@ import RoutePaths from "../../utils/routes";
 import { SchoolTableColumns, StudentTableColumns, UserTableColumns } from "../../utils/columns";
 import { useMemo, useState } from 'react';
 import { MaterialReactTable, useMaterialReactTable, type MRT_ColumnDef } from 'material-react-table';
-import { getTableOptions } from '../../common/tableStyles';
+import { GetTableOptions } from '../../common/tableStyles';
 import NoDataImage from '../../assets/images/NoData.svg';
 import Typography from '@mui/material/Typography';
 
@@ -177,7 +177,7 @@ function UploadedDataTable({ data, isUser, isSchool, isStudent }: { readonly dat
     const table = useMaterialReactTable({
         columns,
         data,
-        ...(getTableOptions() as any),
+        ...(GetTableOptions() as any),
     });
 
     return <MaterialReactTable table={table} />;

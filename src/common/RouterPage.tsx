@@ -2,6 +2,7 @@ import { Suspense, lazy } from 'react';
 import { useStyles } from '../theme/styles';
 import { Routes, Route } from 'react-router-dom';
 
+const Login = lazy(() => import('../pages/auth/Login'));
 const AccountDashboard = lazy(() => import('../pages/account/accountDashboard'));
 const StudentsList = lazy(() => import('../pages/students/students'));
 const TicketsList = lazy(() => import('../pages/tickets/ticketsList'));
@@ -22,6 +23,7 @@ const RouterPage = () => {
             <div style={bodySubMainDiv as React.CSSProperties}>
                 <Suspense fallback={<div>Loading...</div>}>
                     <Routes>
+                        <Route path="/login" element={<Login />} />
                         <Route path="/account" element={<AccountDashboard />} />
                         <Route path="/students" element={<StudentsList />} />
                         <Route path="/tickets" element={<TicketsList />} />

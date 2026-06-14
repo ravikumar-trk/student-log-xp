@@ -4,13 +4,15 @@ import {
     useMaterialReactTable,
     type MRT_ColumnDef,
 } from 'material-react-table';
-import { getTableOptions } from '../../common/tableStyles';
+import { useStyles } from '../../theme/styles';
+import { GetTableOptions } from '../../common/tableStyles';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import ThemedButton from '../../common/ThemedButton';
 import Chip from '../../common/chip';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { formatDateTime } from '../../utils/function';
 import dayjs, { Dayjs } from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -20,6 +22,16 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useNavigate } from 'react-router-dom';
 import RoutePaths from '../../utils/routes';
 import ticketsSerices from "../../services/ticketsSerices";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import masterServices from '../../services/masterSerices';
+import type { UserModel } from '../../models/UserModel';
+import ThemedAutocomplete from '../../common/ThemedAutocomplete';
 
 // Ticket data type
 type Ticket = {
@@ -40,6 +52,43 @@ export default function TicketsList() {
     const [loading, setLoading] = useState<boolean>(false);
     const [tickets, setTickets] = useState<Ticket[]>([]);
     const navigate = useNavigate();
+    const { ticketListTextStyle, ticketListIconStyle } = useStyles();
+    const [openDialog, setOpenDialog] = useState(false);
+    const theme = useTheme();
+    const
+        fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const [users, setUsers] = useState<UserModel[]>([]);
+    const [usersLoading, setUsersLoading] = useState<boolean>(false);
+    const [selectedUser, setSelectedUser] = useState<UserModel | null>(null);
+
+    const getUsersByAccountIDAPI = async () => {
+        try {
+            const res: any = await masterServices.getUsersByAccountID(-1);
+            setUsersLoading(true);
+            setTimeout(() => {
+                setUsers(res?.data?.Result ?? []);
+                setUsersLoading(false);
+            }, 1000);
+        } catch (err: any) {
+            setUsersLoading(false);
+            console.error(err?.message ?? err);
+            alert(err?.message ?? 'Failed to fetch account details');
+        }
+    }
+
+    const handleClickOpenDialog = () => {
+        const selectedRows = table.getSelectedRowModel().flatRows;
+        if (selectedRows.length === 0) {
+            alert('Please select a ticket to assign');
+            return;
+        }
+        getUsersByAccountIDAPI();
+        setOpenDialog(true);
+    };
+
+    const handleClose = () => {
+        setOpenDialog(false);
+    };
 
 
     function timeAgo(isoDate?: string) {
@@ -139,6 +188,16 @@ export default function TicketsList() {
         ],
         [],
     );
+    const renderTopToolbarCustomActions = () => (
+        <div style={{ display: 'flex', gap: '0.5rem', marginTop: '8px' }}>
+            <div
+                style={{ display: 'flex', cursor: 'pointer', ...ticketListTextStyle }}
+                onClick={handleClickOpenDialog}
+            >
+                <ManageAccountsIcon style={ticketListIconStyle} /> <span> Assign</span>
+            </div>
+        </div>
+    );
 
 
     const table = useMaterialReactTable({
@@ -148,7 +207,11 @@ export default function TicketsList() {
             isLoading: loading,
             showLoadingOverlay: false,
         },
-        ...(getTableOptions() as any),
+        enableRowSelection: true,
+        renderTopToolbarCustomActions: () => (
+            renderTopToolbarCustomActions()
+        ),
+        ...(GetTableOptions() as any),
     });
 
     const navigateToNewTicket = () => {
@@ -175,12 +238,57 @@ export default function TicketsList() {
         }
     }
 
+    const handleAssignTicketToUser = async () => {
+        try {
+            debugger
+            const selectedRows = table.getSelectedRowModel().flatRows;
+            if (selectedRows.length === 0) {
+                alert('Please select a ticket to assign');
+                return;
+            }
+            // 
+            const ticketIds = selectedRows.map((row) => row.original.TicketID);
+            const userId = selectedUser?.UserID;
+            if (!userId) {
+                alert('Please select a user to assign the ticket to');
+                return;
+            }
+            const response = await ticketsSerices.assignTicketsToUser(ticketIds.join(','), userId);
+            if (response.status === 200) {
+                console.log('Assign ticket response:', response);
+                alert(response.data.Message || 'Ticket(s) assigned successfully');
+                // Optionally, refresh tickets list after assignment
+                fetchTickets();
+            }
+            if (response.status === 202) {
+                alert(response.data.Warnings[0] || 'Ticket assignment returned a warning');
+            }
+        }
+        catch (err: any) {
+            console.error('Error assigning ticket:', err?.message ?? err);
+            alert(err?.message ?? 'Failed to assign ticket');
+        }
+        finally {
+            setOpenDialog(false);
+            setSelectedUser(null);
+        }
+    }
+
     useEffect(() => {
         setLoading(true);
         fetchTickets();
     }, []);
 
-
+    const userProps = {
+        options: users,
+        blurOnSelect: true,
+        getOptionLabel: (option: UserModel) => option.UserName,
+        loading: usersLoading,
+        value: selectedUser,
+        onChange: (_: any, newValue: UserModel | null) => {
+            setSelectedUser(newValue);
+        },
+    };
 
 
     return <>
@@ -237,5 +345,37 @@ export default function TicketsList() {
             </Grid>
         </Grid >
         <MaterialReactTable table={table} />
+        <Dialog
+            fullScreen={fullScreen}
+            open={openDialog}
+            onClose={handleClose}
+            aria-labelledby="responsive-dialog-title"
+        >
+            <DialogTitle id="responsive-dialog-title">
+                Assign Ticket to User
+            </DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    <Grid container spacing={2} sx={{ width: '500px' }}>
+                        <Grid size={12}>
+                            <ThemedAutocomplete
+                                {...userProps}
+                                id="user-select"
+                                disableCloseOnSelect
+                                label="Users"
+                            />
+                        </Grid>
+                    </Grid>
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions sx={{ paddingBottom: '16px' }}>
+                <ThemedButton
+                    text="Close"
+                    variant="outlined"
+                    autoFocus onClick={handleClose}
+                /> &nbsp;&nbsp;
+                <ThemedButton text="Assign" variant="contained" onClick={handleAssignTicketToUser} autoFocus /> &nbsp;&nbsp;
+            </DialogActions>
+        </Dialog>
     </>;
 }

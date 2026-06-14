@@ -1,11 +1,12 @@
 import { useStyles } from "../theme/styles";
 
-export const getTableOptions = () => {
+export const GetTableOptions = () => {
     const {
         tablePaperStyles,
         tableHeaderCellStyle,
         tableBodyCellStyle,
         tableToolBarStyles,
+        tableTopToolBarStyles,
         muiTableBodyRowProps,
     } = useStyles();
     return {
@@ -24,7 +25,7 @@ export const getTableOptions = () => {
             sx: { ...muiTableBodyRowProps(row) },
         }),
         muiTopToolbarProps: {
-            sx: { ...tableToolBarStyles }
+            sx: { ...tableToolBarStyles, ...tableTopToolBarStyles }
         },
         muiBottomToolbarProps: {
             sx: { ...tableToolBarStyles }

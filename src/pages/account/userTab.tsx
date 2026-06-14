@@ -4,7 +4,7 @@ import {
     useMaterialReactTable,
     type MRT_ColumnDef,
 } from 'material-react-table';
-import { getTableOptions } from '../../common/tableStyles';
+import { GetTableOptions } from '../../common/tableStyles';
 import Chip from '../../common/chip';
 import type { UserModel } from '../../models/UserModel';
 import { UserTableColumns } from '../../utils/columns'
@@ -55,7 +55,7 @@ const UserTab = () => {
             isLoading: loading,
             showLoadingOverlay: false,
         },
-        ...getTableOptions(),
+        ...GetTableOptions(),
     });
 
     return (

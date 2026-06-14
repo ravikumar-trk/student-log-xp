@@ -30,7 +30,7 @@ const axiosClient = axios.create({
 // -----------------------
 axiosClient.interceptors.request.use(
   async (config) => {
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("token");
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -40,7 +40,7 @@ axiosClient.interceptors.request.use(
   },
   async (error) => {
     throw error;
-  }
+  },
 );
 
 // -----------------------
@@ -131,7 +131,7 @@ axiosClient.interceptors.response.use(
     (apiError as any).status = status;
     (apiError as any).data = error.response.data;
     throw apiError;
-  }
+  },
 );
 
 export default axiosClient;

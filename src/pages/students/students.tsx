@@ -4,7 +4,7 @@ import {
     useMaterialReactTable,
     type MRT_ColumnDef,
 } from 'material-react-table';
-import { getTableOptions } from '../../common/tableStyles';
+import { GetTableOptions } from '../../common/tableStyles';
 import Grid from '@mui/material/Grid';
 // ...existing code...
 import ThemedTextField from '../../common/ThemedTextField';
@@ -138,7 +138,7 @@ export default function StudentsList() {
             isLoading: loading,
             showLoadingOverlay: false,
         },
-        ...(getTableOptions() as any),
+        ...(GetTableOptions() as any),
     });
 
 

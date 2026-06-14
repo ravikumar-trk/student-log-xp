@@ -1,8 +1,7 @@
+import { useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { useStyles } from '../../theme/styles';
-import { IconButton } from '@mui/material';
 import BusinessIcon from '@mui/icons-material/Business';
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import PersonIcon from '@mui/icons-material/Person';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
@@ -10,10 +9,11 @@ import EmailIcon from '@mui/icons-material/Email';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CommentIcon from '@mui/icons-material/Comment';
 import DescriptionIcon from '@mui/icons-material/Description';
-import Chip from '../../common/chip';
+// import Chip from '../../common/chip';
+import TextChip from '../../common/chip/TextChip';
+import StatusChip from '../../common/chip/statusChip';
 import { useLocation, useNavigate } from "react-router-dom";
 import ticketsSerices from "../../services/ticketsSerices";
-import { useEffect, useState } from 'react';
 import RoutePaths from '../../utils/routes';
 
 export default function ticketDetails() {
@@ -87,7 +87,7 @@ export default function ticketDetails() {
                                 <PriorityHighIcon style={trackerIconStyle} />
                                 <div>
                                     <div style={displayTitle}>Priority</div>
-                                    <div style={displayValue}><Chip status={ticketDetails?.Priority} /></div>
+                                    <div style={displayValue}><TextChip text={ticketDetails?.Priority} /></div>
                                 </div>
                             </div>
                         </Grid>
@@ -96,7 +96,7 @@ export default function ticketDetails() {
                                 <BusinessIcon style={trackerIconStyle} />
                                 <div>
                                     <div style={displayTitle}>Status</div>
-                                    <div style={displayValue}><Chip status={ticketDetails?.Status} /></div>
+                                    <div style={displayValue}><StatusChip status={ticketDetails?.Status} /></div>
                                 </div>
                             </div>
                         </Grid>
@@ -159,8 +159,8 @@ export default function ticketDetails() {
                             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                                 <PersonIcon style={trackerIconStyle} />
                                 <div>
-                                    <div style={displayTitle}>Reviewed By</div>
-                                    <div style={displayValue}>Ravi Kumar</div>
+                                    <div style={displayTitle}>Assigned To</div>
+                                    <div style={displayValue}>{ticketDetails?.AssignedToName || 'Not assigned'}</div>
                                 </div>
                             </div>
                         </Grid>
@@ -168,8 +168,8 @@ export default function ticketDetails() {
                             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                                 <AccessTimeFilledIcon style={trackerIconStyle} />
                                 <div>
-                                    <div style={displayTitle}>Reviewed On</div>
-                                    <div style={displayValue}>2025-10-06</div>
+                                    <div style={displayTitle}>Assigned On</div>
+                                    <div style={displayValue}>{ticketDetails?.AssignedOn || 'Not assigned'}</div>
                                 </div>
                             </div>
                         </Grid>
@@ -178,7 +178,7 @@ export default function ticketDetails() {
                                 <BusinessIcon style={trackerIconStyle} />
                                 <div>
                                     <div style={displayTitle}>Status</div>
-                                    <div style={displayValue}><Chip status="Approved" /></div>
+                                    <div style={displayValue}><StatusChip status="Approved" /></div>
                                 </div>
                             </div>
                         </Grid>
@@ -233,7 +233,7 @@ export default function ticketDetails() {
                                 <BusinessIcon style={trackerIconStyle} />
                                 <div>
                                     <div style={displayTitle}>Status</div>
-                                    <div style={displayValue}><Chip status="Completed" /></div>
+                                    <div style={displayValue}><StatusChip status="Completed" /></div>
                                 </div>
                             </div>
                         </Grid>

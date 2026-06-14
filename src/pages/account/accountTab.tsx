@@ -20,11 +20,10 @@ import Skeleton from '@mui/material/Skeleton';
 
 const AccountTab = () => {
     const { accountTabStyles, accountTabImageDiv, accountTabLogo, displayTitle, displayValue, navIconButtonStyle, navIconStyle } = useStyles();
-    const primaryColor = useAppSelector((state) => state.theme.primaryColor);
     const mode = useAppSelector((state) => state.theme.mode);
-    const skin = useAppSelector((state) => state.theme.skin);
     const [account, setAccount] = useState<AccountModel | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
+    const userLoginInfo = useAppSelector((state) => state.common.userLoginInfo);
 
     const getAccountDetailsAPI = async () => {
         try {

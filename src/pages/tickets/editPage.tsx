@@ -14,7 +14,7 @@ import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
-import { getTableOptions } from '../../common/tableStyles';
+import { GetTableOptions } from '../../common/tableStyles';
 import NoDataImage from '../../assets/images/NoData.svg';
 import { IconButton } from "@mui/material";
 import type { SchoolModel } from "../../models/SchoolModel";
@@ -280,7 +280,7 @@ const EditPage = () => {
             mrtTheme: () => ({
                 selectedRowBackgroundColor: '#cf5757ff',
             }),
-            ...(getTableOptions() as any),
+            ...(GetTableOptions() as any),
         });
 
         return <MaterialReactTable table={table} />;
@@ -335,7 +335,7 @@ const EditPage = () => {
             //             </Grid>
             //         </Grid >) : null
             // ),
-            ...(getTableOptions() as any),
+            ...(GetTableOptions() as any),
         });
 
         return <MaterialReactTable table={table} />;

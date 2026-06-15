@@ -14,7 +14,7 @@ import studentServices from '../../services/studentsServices';
 import masterServices from '../../services/masterSerices';
 import type { SchoolModel } from '../../models/SchoolModel';
 import type { StudentModel, GetStudentModel } from '../../models/StudentModel';
-import { StudentTableColumns } from '../../utils/columns';
+import { StudentTableColumns } from '../../utils/columns.ts';
 
 
 

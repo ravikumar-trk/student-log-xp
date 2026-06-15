@@ -27,7 +27,7 @@ const AccountTab = () => {
 
     const getAccountDetailsAPI = async () => {
         try {
-            const res: any = await masterServices.getAccountDetails(2);
+            const res: any = await masterServices.getAccountDetails(userLoginInfo.AccountID);
             setTimeout(() => {
                 setLoading(false);
                 const data: AccountModel | null = res?.data?.Result[0] ?? null;

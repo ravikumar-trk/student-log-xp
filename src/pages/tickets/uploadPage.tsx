@@ -28,7 +28,7 @@ import RoutePaths from "../../utils/routes";
 import type { SchoolModel } from "../../models/SchoolModel";
 import masterServices from "../../services/masterSerices";
 import ticketsSerices from "../../services/ticketsSerices";
-import { StudentTableColumns, SchoolTableColumns, UserTableColumns } from "../../utils/columns";
+import { StudentTableColumns, SchoolTableColumns, UserTableColumns } from "../../utils/columns.ts";
 import { fileNameWithTimestamp } from "../../utils/function";
 
 const UploadPage = () => {

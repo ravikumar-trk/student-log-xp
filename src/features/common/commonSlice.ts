@@ -2,20 +2,30 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 type UserLoginInfo = {
-  id?: string;
-  name?: string;
-  email?: string;
-  token?: string;
-  [key: string]: any;
+  AccountCode: string;
+  AccountID: number;
+  SchoolIDs: string;
+  SchoolNames: string;
+  UserID: number;
+  UserName: string;
+};
+
+const IUserLoginInfo: UserLoginInfo = {
+  AccountCode: "",
+  AccountID: 0,
+  SchoolIDs: "",
+  SchoolNames: "",
+  UserID: 0,
+  UserName: "",
 };
 
 type CommonState = {
-  userLoginInfo: UserLoginInfo | null;
+  userLoginInfo: UserLoginInfo;
   loading: boolean;
 };
 
 const initialState: CommonState = {
-  userLoginInfo: null,
+  userLoginInfo: IUserLoginInfo,
   loading: false,
 };
 

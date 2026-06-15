@@ -4,7 +4,7 @@ import { useStyles } from '../../theme/styles';
 import ThemedButton from "../../common/ThemedButton";
 import ThemedAutocomplete from "../../common/ThemedAutocomplete";
 import * as XLSX from 'xlsx-js-style';
-import { SchoolTableColumns, StudentTableColumns, UserTableColumns } from "../../utils/columns";
+import { SchoolTableColumns, StudentTableColumns, UserTableColumns } from "../../utils/columns.ts";
 import { useMemo, useState, useEffect } from 'react';
 import { MaterialReactTable, useMaterialReactTable, type MRT_ColumnDef, type MRT_RowSelectionState, } from 'material-react-table';
 import Dialog from '@mui/material/Dialog';

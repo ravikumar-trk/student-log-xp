@@ -25,7 +25,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     // Check if userLoginInfo is already in the store
-    if (!userLoginInfo) {
+    if (userLoginInfo.AccountID === 0) {
       // If not, check localStorage for a token
       const token = localStorage.getItem("token");
       if (token) {

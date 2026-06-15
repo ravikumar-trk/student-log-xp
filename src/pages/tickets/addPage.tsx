@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ThemedButton from "../../common/ThemedButton";
 import * as XLSX from 'xlsx-js-style';
 import RoutePaths from "../../utils/routes";
-import { SchoolTableColumns, StudentTableColumns, UserTableColumns } from "../../utils/columns";
+import { SchoolTableColumns, StudentTableColumns, UserTableColumns } from "../../utils/columns.ts";
 import { useMemo, useState } from 'react';
 import { MaterialReactTable, useMaterialReactTable, type MRT_ColumnDef } from 'material-react-table';
 import { GetTableOptions } from '../../common/tableStyles';

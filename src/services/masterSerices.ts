@@ -5,6 +5,10 @@ import {
   GET_CLASSES_BY_SCHOOL_ID,
   POST_UPSERT_CLASSES,
   GET_USERS_BY_ACCOUNT_ID,
+  POST_INSERT_SCHOOL,
+  PATCH_UPDATE_SCHOOL,
+  POST_INSERT_USER,
+  PATCH_UPDATE_USER,
 } from "./constants";
 
 const masterServices = {
@@ -24,21 +28,27 @@ const masterServices = {
     return response;
   },
 
-  async getSchoolsByAccountID(accountID: number): Promise<any> {
+  async getSchoolsByAccountID(
+    accountID: number,
+    isActive: number = 1,
+  ): Promise<any> {
     const url = GET_SCHOOLS_BY_ACCOUNT_ID.replace(
       "{accountId}",
       accountID.toString(),
     );
-    const response = await axiosClient.get(url);
+    const response = await axiosClient.get(`${url}?isActive=${isActive}`);
     return response;
   },
 
-  async getUsersByAccountID(accountID: number): Promise<any> {
+  async getUsersByAccountID(
+    accountID: number,
+    isActive: number = 1,
+  ): Promise<any> {
     const url = GET_USERS_BY_ACCOUNT_ID.replace(
       "{accountId}",
       accountID.toString(),
     );
-    const response = await axiosClient.get(url);
+    const response = await axiosClient.get(`${url}?isActive=${isActive}`);
     return response;
   },
 
@@ -56,6 +66,26 @@ const masterServices = {
 
   async upsertClasses(payload: any): Promise<any> {
     const response = await axiosClient.post(POST_UPSERT_CLASSES, payload);
+    return response;
+  },
+
+  async addSchool(payload: any): Promise<any> {
+    const response = await axiosClient.post(POST_INSERT_SCHOOL, payload);
+    return response;
+  },
+
+  async updateSchool(payload: any): Promise<any> {
+    const response = await axiosClient.patch(PATCH_UPDATE_SCHOOL, payload);
+    return response;
+  },
+
+  async addUser(payload: any): Promise<any> {
+    const response = await axiosClient.post(POST_INSERT_USER, payload);
+    return response;
+  },
+
+  async updateUser(payload: any): Promise<any> {
+    const response = await axiosClient.patch(PATCH_UPDATE_USER, payload);
     return response;
   },
 };

@@ -103,8 +103,8 @@ axiosClient.interceptors.response.use(
         message = "Unauthorized — please login again!";
 
         // Optional: auto logout / refresh token
-        // localStorage.removeItem("authToken");
-        // window.location.href = "/login";
+        localStorage.removeItem("authToken");
+        window.location.href = "/login";
         break;
 
       case 403:

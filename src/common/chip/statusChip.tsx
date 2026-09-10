@@ -26,12 +26,12 @@ const StatusChip: React.FC<Props> = ({ status }) => {
 
     return (
         <div style={style}>
-            <Icon
+            {/* <Icon
                 style={{
                     ...iconStyle,
                     color: style.color,
                 }}
-            />
+            /> */}
             <span>{status}</span>
         </div>
     );

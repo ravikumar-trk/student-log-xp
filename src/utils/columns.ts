@@ -66,7 +66,7 @@ export const UserTableColumns = [
 
 export const StudentTableColumns = [
   {
-    accessorKey: "SchoolName",
+    accessorKey: "SchoolCode",
     header: "School",
     size: 240,
     excelIgnore: false,
@@ -79,20 +79,26 @@ export const StudentTableColumns = [
   },
   {
     accessorKey: "AdmissionNo",
-    header: "Admission No",
+    header: "AdmissionNo",
     size: 160,
     excelIgnore: false,
   },
   {
     accessorKey: "RollNo",
-    header: "Roll No",
+    header: "RollNo",
     size: 100,
     excelIgnore: false,
   },
   {
     accessorKey: "StudentName",
-    header: "Student Name",
+    header: "StudentName",
     size: 240,
+    excelIgnore: false,
+  },
+  {
+    accessorKey: "StudentID",
+    header: "StudentID",
+    size: 120,
     excelIgnore: false,
   },
 ];

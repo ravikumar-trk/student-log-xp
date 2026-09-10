@@ -5,7 +5,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SchoolIcon from '@mui/icons-material/School';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import SummarizeIcon from '@mui/icons-material/Summarize';
-import SettingsIcon from '@mui/icons-material/Settings';
+import TuneIcon from '@mui/icons-material/Tune';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import { useAppSelector } from '../hooks/reduxHooks';
 import { useStyles } from '../theme/styles';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -26,7 +27,7 @@ const SideBar: React.FC = () => {
         {
             page: 'Students', icon: <SchoolIcon />,
             pages: [
-                { text: 'Students List', path: '/students' },
+                { text: 'Students', path: '/students' },
             ]
         },
         {
@@ -38,15 +39,23 @@ const SideBar: React.FC = () => {
             ]
         },
         {
+            page: 'Daily-Work', icon: <AssignmentIcon />,
+            pages: [
+                { text: 'Daily Work', path: '/daily-work' },
+                { text: 'Assign Work', path: '/daily-work/assign' },
+                { text: 'Submissions', path: '/daily-work/submissions' },
+            ]
+        },
+        {
             page: 'Reports', icon: <SummarizeIcon />,
             pages: [
                 { text: 'Reports', path: '/reports' },
             ]
         },
         {
-            page: 'Settings', icon: <SettingsIcon />,
+            page: 'Configurations', icon: <TuneIcon />,
             pages: [
-                { text: 'Settings', path: '/settings' },
+                { text: 'Configurations', path: '/configurations' },
             ]
         },
     ];
@@ -77,31 +86,31 @@ const SideBar: React.FC = () => {
     return (
         <Box sx={sidebarStyles}>
             <List sx={{ p: 0 }}>
-                {menuItems.map(({ page, icon }) => (
-                    <ListItem key={page} disablePadding sx={selected === page ? { backgroundColor: primaryColor.lightColor } : {}}>
+                {menuItems.map(item => (
+                    <ListItem key={item.page} disablePadding sx={selected === item.page ? { backgroundColor: primaryColor.lightColor } : {}}>
                         <ListItemButton
-                            selected={selected === page}
-                            onClick={() => navigateTo(page)}
-                            sx={selected === page ? {
+                            selected={selected === item.page}
+                            onClick={() => navigateTo(item.page)}
+                            sx={selected === item.page ? {
                                 '& .MuiListItemIcon-root': { color: '#fff' },
                                 '&:hover': { backgroundColor: primaryColor.color },
                             } : {}}
                         >
                             <ListItemIcon
                                 style={{
-                                    color: getTextColor(selected === page),
+                                    color: getTextColor(selected === item.page),
                                     minWidth: '45px',
                                 }}
                             >
-                                {icon}
+                                {item.icon}
                             </ListItemIcon>
                             <ListItemText
                                 sx={{
-                                    color: getTextColor(selected === page),
+                                    color: getTextColor(selected === item.page),
                                     fontSize: '20px !important',
                                     fontWeight: '600 !important',
                                 }}
-                                primary={page}
+                                primary={item.page}
                             />
                         </ListItemButton>
                     </ListItem>

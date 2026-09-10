@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
+import * as XLSX from 'xlsx-js-style';
 import {
     MaterialReactTable,
     useMaterialReactTable,
     type MRT_ColumnDef,
+    type MRT_RowSelectionState,
 } from 'material-react-table';
 import { GetTableOptions } from '../../common/tableStyles';
 import Grid from '@mui/material/Grid';
@@ -10,15 +12,22 @@ import Grid from '@mui/material/Grid';
 import ThemedTextField from '../../common/ThemedTextField';
 import ThemedAutocomplete from '../../common/ThemedAutocomplete';
 import ThemedButton from '../../common/ThemedButton';
+import { useNavigate } from 'react-router-dom';
 import studentServices from '../../services/studentsServices';
 import masterServices from '../../services/masterSerices';
 import type { SchoolModel } from '../../models/SchoolModel';
 import type { StudentModel, GetStudentModel } from '../../models/StudentModel';
 import { StudentTableColumns } from '../../utils/columns.ts';
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
+import { setSelectedStudents } from '../../features/dataSlice';
 
 
 
 export default function StudentsList() {
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const selectedStudents = useAppSelector((state) => state.data.selectedStudents);
+    const userLoginInfo = useAppSelector((state) => state.common.userLoginInfo);
     const [students, setStudents] = useState<StudentModel[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -30,6 +39,8 @@ export default function StudentsList() {
 
     const [selectedSchool, setSelectedSchool] = useState<SchoolModel | null>(null);
     const [selectedClass, setSelectedClass] = useState<{ ClassID: number; ClassCode: string } | null>(null);
+    const [admissionNo, setAdmissionNo] = useState('');
+    const [studentName, setStudentName] = useState('');
 
     const getStudentsListAPI = async () => {
         const payload: GetStudentModel = {
@@ -37,9 +48,9 @@ export default function StudentsList() {
             StudentID: 0,
             ClassID: 0,
             SchoolID: 0,
-            AccountID: 2,
+            AccountID: userLoginInfo.AccountID,
             IsDropdown: false,
-            LoginUserID: 2,
+            LoginUserID: userLoginInfo.UserID,
         };
         try {
             const res: any = await studentServices.getStudentsList(payload);
@@ -62,7 +73,7 @@ export default function StudentsList() {
 
     const getSchoolsAPI = async () => {
         try {
-            const res: any = await masterServices.getSchoolsByAccountID(2);
+            const res: any = await masterServices.getSchoolsByAccountID(userLoginInfo.AccountID);
             setTimeout(() => {
                 setSchoolsLoading(false);
                 const data = res?.data?.Result ?? [];
@@ -78,11 +89,11 @@ export default function StudentsList() {
     const getClassesAPI = async (schoolID: number) => {
         setClassesLoading(true);
         try {
-            const res: any = await masterServices.getClassesBySchoolID(2, schoolID);
+            const res: any = await masterServices.getClassesBySchoolID(userLoginInfo.AccountID, schoolID);
             setTimeout(() => {
                 const studentsForDropdown: StudentModel[] = res?.data?.Result ?? [];
                 const map = new Map<number, { ClassID: number; ClassCode: string; IsActive: boolean }>();
-                debugger
+
                 studentsForDropdown.forEach((s) => {
                     if (s.ClassID && s.ClassCode && !map.has(s.ClassID) && s.IsActive) {
                         map.set(s.ClassID, { ClassID: s.ClassID, ClassCode: s.ClassCode, IsActive: s.IsActive });
@@ -119,6 +130,61 @@ export default function StudentsList() {
             setSelectedClass(newValue);
         },
     };
+
+    const rowSelection: MRT_RowSelectionState = selectedStudents.reduce<MRT_RowSelectionState>(
+        (selection, student) => {
+            selection[String(student.StudentID)] = true;
+            return selection;
+        },
+        {},
+    );
+
+    const handleRowSelectionChange = (
+        updater: MRT_RowSelectionState | ((previous: MRT_RowSelectionState) => MRT_RowSelectionState),
+    ) => {
+        const nextSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
+        const selectedById = new Map(
+            selectedStudents.map((student) => [String(student.StudentID), student]),
+        );
+
+        students.forEach((student) => {
+            const studentId = String(student.StudentID);
+            if (nextSelection[studentId]) {
+                selectedById.set(studentId, student);
+            } else {
+                selectedById.delete(studentId);
+            }
+        });
+
+        dispatch(setSelectedStudents(Array.from(selectedById.values())));
+    };
+
+    const handleDownload = () => {
+        if (selectedStudents.length === 0) {
+            alert('Please select at least one student to download.');
+            return;
+        }
+
+        const headers = StudentTableColumns.map((column) => column.header);
+        const fields = StudentTableColumns.map((column) => column.accessorKey);
+        const worksheetData = [
+            headers,
+            ...selectedStudents.map((student) => fields.map((field) => student[field as keyof StudentModel] ?? '')),
+        ];
+        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Students');
+        XLSX.writeFile(workbook, 'Students.xlsx');
+        dispatch(setSelectedStudents([]));
+    };
+
+    const handleClear = () => {
+        setSelectedSchool(null);
+        setSelectedClass(null);
+        setAdmissionNo('');
+        setStudentName('');
+        dispatch(setSelectedStudents([]));
+    };
     // local state for future enhancements (filters) - currently unused
 
 
@@ -134,7 +200,11 @@ export default function StudentsList() {
     const table = useMaterialReactTable({
         columns,
         data: students,
+        enableRowSelection: true,
+        getRowId: (row) => String(row.StudentID),
+        onRowSelectionChange: handleRowSelectionChange,
         state: {
+            rowSelection,
             isLoading: loading,
             showLoadingOverlay: false,
         },
@@ -161,7 +231,14 @@ export default function StudentsList() {
                 />
             </Grid>
             <Grid size={2}>
-                <ThemedTextField id="standard-basic" label="Admission No." variant="standard" fullWidth={true} />
+                <ThemedTextField
+                    id="standard-basic"
+                    label="Admission No."
+                    variant="standard"
+                    fullWidth={true}
+                    value={admissionNo}
+                    onChange={(event) => setAdmissionNo(event.target.value)}
+                />
             </Grid>
             <Grid size={2}>
                 <ThemedTextField
@@ -169,146 +246,26 @@ export default function StudentsList() {
                     label="Student Name"
                     variant="standard"
                     fullWidth={true}
+                    value={studentName}
+                    onChange={(event) => setStudentName(event.target.value)}
                 />
             </Grid>
             <Grid size={4} style={{ textAlign: 'right' }}>
-                <ThemedButton text="Clear" variant="outlined" /> &nbsp;&nbsp;
-                <ThemedButton text="Search" variant="contained" />
+                <ThemedButton text="Clear" variant="outlined" handleClick={handleClear} /> &nbsp;&nbsp;
+                <ThemedButton text="Search" variant="contained" /> &nbsp;&nbsp;
+                <ThemedButton
+                    text="Upload"
+                    variant="contained"
+                    handleClick={() => navigate('/students/upload')}
+                /> &nbsp;&nbsp;
+                <ThemedButton
+                    text={selectedStudents.length > 0 ? `Download (${selectedStudents.length})` : 'Download'}
+                    variant="contained"
+                    handleClick={handleDownload}
+                    disabled={selectedStudents.length === 0}
+                />
             </Grid>
         </Grid>
         <MaterialReactTable table={table} />
     </>;
 }
-
-interface FilmOptionType {
-    title: string;
-    year: number;
-}
-
-// Top 100 films as rated by IMDb users. http://www.imdb.com/chart/top
-const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-    { title: 'The Dark Knight', year: 2008 },
-    { title: '12 Angry Men', year: 1957 },
-    { title: "Schindler's List", year: 1993 },
-    { title: 'Pulp Fiction', year: 1994 },
-    {
-        title: 'The Lord of the Rings: The Return of the King',
-        year: 2003,
-    },
-    { title: 'The Good, the Bad and the Ugly', year: 1966 },
-    { title: 'Fight Club', year: 1999 },
-    {
-        title: 'The Lord of the Rings: The Fellowship of the Ring',
-        year: 2001,
-    },
-    {
-        title: 'Star Wars: Episode V - The Empire Strikes Back',
-        year: 1980,
-    },
-    { title: 'Forrest Gump', year: 1994 },
-    { title: 'Inception', year: 2010 },
-    {
-        title: 'The Lord of the Rings: The Two Towers',
-        year: 2002,
-    },
-    { title: "One Flew Over the Cuckoo's Nest", year: 1975 },
-    { title: 'Goodfellas', year: 1990 },
-    { title: 'The Matrix', year: 1999 },
-    { title: 'Seven Samurai', year: 1954 },
-    {
-        title: 'Star Wars: Episode IV - A New Hope',
-        year: 1977,
-    },
-    { title: 'City of God', year: 2002 },
-    { title: 'Se7en', year: 1995 },
-    { title: 'The Silence of the Lambs', year: 1991 },
-    { title: "It's a Wonderful Life", year: 1946 },
-    { title: 'Life Is Beautiful', year: 1997 },
-    { title: 'The Usual Suspects', year: 1995 },
-    { title: 'Léon: The Professional', year: 1994 },
-    { title: 'Spirited Away', year: 2001 },
-    { title: 'Saving Private Ryan', year: 1998 },
-    { title: 'Once Upon a Time in the West', year: 1968 },
-    { title: 'American History X', year: 1998 },
-    { title: 'Interstellar', year: 2014 },
-    { title: 'Casablanca', year: 1942 },
-    { title: 'City Lights', year: 1931 },
-    { title: 'Psycho', year: 1960 },
-    { title: 'The Green Mile', year: 1999 },
-    { title: 'The Intouchables', year: 2011 },
-    { title: 'Modern Times', year: 1936 },
-    { title: 'Raiders of the Lost Ark', year: 1981 },
-    { title: 'Rear Window', year: 1954 },
-    { title: 'The Pianist', year: 2002 },
-    { title: 'The Departed', year: 2006 },
-    { title: 'Terminator 2: Judgment Day', year: 1991 },
-    { title: 'Back to the Future', year: 1985 },
-    { title: 'Whiplash', year: 2014 },
-    { title: 'Gladiator', year: 2000 },
-    { title: 'Memento', year: 2000 },
-    { title: 'The Prestige', year: 2006 },
-    { title: 'The Lion King', year: 1994 },
-    { title: 'Apocalypse Now', year: 1979 },
-    { title: 'Alien', year: 1979 },
-    { title: 'Sunset Boulevard', year: 1950 },
-    {
-        title: 'Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb',
-        year: 1964,
-    },
-    { title: 'The Great Dictator', year: 1940 },
-    { title: 'Cinema Paradiso', year: 1988 },
-    { title: 'The Lives of Others', year: 2006 },
-    { title: 'Grave of the Fireflies', year: 1988 },
-    { title: 'Paths of Glory', year: 1957 },
-    { title: 'Django Unchained', year: 2012 },
-    { title: 'The Shining', year: 1980 },
-    { title: 'WALL·E', year: 2008 },
-    { title: 'American Beauty', year: 1999 },
-    { title: 'The Dark Knight Rises', year: 2012 },
-    { title: 'Princess Mononoke', year: 1997 },
-    { title: 'Aliens', year: 1986 },
-    { title: 'Oldboy', year: 2003 },
-    { title: 'Once Upon a Time in America', year: 1984 },
-    { title: 'Witness for the Prosecution', year: 1957 },
-    { title: 'Das Boot', year: 1981 },
-    { title: 'Citizen Kane', year: 1941 },
-    { title: 'North by Northwest', year: 1959 },
-    { title: 'Vertigo', year: 1958 },
-    {
-        title: 'Star Wars: Episode VI - Return of the Jedi',
-        year: 1983,
-    },
-    { title: 'Reservoir Dogs', year: 1992 },
-    { title: 'Braveheart', year: 1995 },
-    { title: 'M', year: 1931 },
-    { title: 'Requiem for a Dream', year: 2000 },
-    { title: 'Amélie', year: 2001 },
-    { title: 'A Clockwork Orange', year: 1971 },
-    { title: 'Like Stars on Earth', year: 2007 },
-    { title: 'Taxi Driver', year: 1976 },
-    { title: 'Lawrence of Arabia', year: 1962 },
-    { title: 'Double Indemnity', year: 1944 },
-    {
-        title: 'Eternal Sunshine of the Spotless Mind',
-        year: 2004,
-    },
-    { title: 'Amadeus', year: 1984 },
-    { title: 'To Kill a Mockingbird', year: 1962 },
-    { title: 'Toy Story 3', year: 2010 },
-    { title: 'Logan', year: 2017 },
-    { title: 'Full Metal Jacket', year: 1987 },
-    { title: 'Dangal', year: 2016 },
-    { title: 'The Sting', year: 1973 },
-    { title: '2001: A Space Odyssey', year: 1968 },
-    { title: "Singin' in the Rain", year: 1952 },
-    { title: 'Toy Story', year: 1995 },
-    { title: 'Bicycle Thieves', year: 1948 },
-    { title: 'The Kid', year: 1921 },
-    { title: 'Inglourious Basterds', year: 2009 },
-    { title: 'Snatch', year: 2000 },
-    { title: '3 Idiots', year: 2009 },
-    { title: 'Monty Python and the Holy Grail', year: 1975 },
-];

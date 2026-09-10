@@ -8,6 +8,7 @@ export const baseStyle: React.CSSProperties = {
   borderRadius: "6px",
   fontWeight: "bold",
   display: "inline-flex",
+  justifyContent: "center",
   alignItems: "center",
   gap: "6px",
   minWidth: "80px",
@@ -67,5 +68,17 @@ export const statusChipStyles = {
   New: {
     style: { backgroundColor: "#cce5ff", color: "#004085", padding: "4px 8px" },
     Icon: AccessTimeIcon,
+  },
+  UPDATED: {
+    style: { backgroundColor: "#d4edda", color: "#155724", padding: "4px 8px" },
+    Icon: CheckCircleOutlineIcon,
+  },
+  INSERTED: {
+    style: { backgroundColor: "#d4edda", color: "#155724", padding: "4px 8px" },
+    Icon: CheckCircleOutlineIcon,
+  },
+  ERROR: {
+    style: { backgroundColor: "#f8d7da", color: "#721c24", padding: "4px 8px" },
+    Icon: FiberManualRecordIcon,
   },
 };

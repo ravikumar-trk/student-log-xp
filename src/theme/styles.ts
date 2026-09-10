@@ -401,8 +401,8 @@ export function useStyles() {
         },
       },
 
-      // settings dashboard styles
-      settingsCards: {
+      // configurations dashboard styles
+      configurationsCards: {
         backgroundColor: isDark ? darkBackgroundColor : "#fff",
         borderRadius: "8px",
         boxShadow: isDark
@@ -424,15 +424,15 @@ export function useStyles() {
         },
         // change paragraph color when the card is hovered
       },
-      settingsCardItemStyle: {
+      configurationsCardItemStyle: {
         color: isDark ? darkModeTextColor : "#000",
         fontWeight: 400,
         letterSpacing: "0.5px",
         marginTop: 0,
         marginBottom: "0px",
       },
-      // settings dashboard icon styles
-      settingsCardIconStyle: {
+      // configurations dashboard icon styles
+      configurationsCardIconStyle: {
         color: isDark ? darkModeTextColor : "#000",
         fontWeight: 400,
         letterSpacing: "0.5px",

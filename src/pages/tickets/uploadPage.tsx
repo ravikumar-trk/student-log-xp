@@ -30,6 +30,7 @@ import masterServices from "../../services/masterSerices";
 import ticketsSerices from "../../services/ticketsSerices";
 import { StudentTableColumns, SchoolTableColumns, UserTableColumns } from "../../utils/columns.ts";
 import { fileNameWithTimestamp } from "../../utils/function";
+import { borderColor } from "../../theme/colors.ts";
 
 const UploadPage = () => {
     const { pageDetailsTitle } = useStyles();

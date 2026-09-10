@@ -10,6 +10,7 @@ export const POST_INSERT_USER = "/account/user";
 export const PATCH_UPDATE_USER = "/account/user";
 export const POST_UPSERT_CLASSES = "/Account/UpsertClasses";
 export const GET_STUDENTS_LIST = "/student/students";
+export const UPSERT_STUDENTS_LIST = "/student/upsert-students";
 export const POST_CREATE_TICKET = "/ticket/create-ticket";
 export const GET_TICKETS = "/ticket/tickets";
 export const GET_TICKET_DETAILS = "/ticket/{ticketId}/ticket-details";

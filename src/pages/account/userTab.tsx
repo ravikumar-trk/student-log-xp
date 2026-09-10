@@ -84,7 +84,6 @@ const UserTab = () => {
 
     const handleSave = async (data: any) => {
         try {
-            debugger
             if (dialogMode === "add") {
                 const response = await masterServices.addUser(data);
                 if (response.status === 200) {

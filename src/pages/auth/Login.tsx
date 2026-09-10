@@ -47,7 +47,6 @@ const Login: React.FC = () => {
             const response = await authServices.login(credentials);
 
             console.log("Login Response:", response);
-            debugger
 
             if (response?.status === 200) {
                 // Store JWT token

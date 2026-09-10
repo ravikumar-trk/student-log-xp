@@ -19,9 +19,11 @@ const students: StudentModel[] = [
 
 type StoreStudentModel = {
   students: StudentModel[];
+  selectedStudents: StudentModel[];
 };
 const initialState: StoreStudentModel = {
   students: students,
+  selectedStudents: [],
 };
 
 const dataSlice = createSlice({
@@ -31,8 +33,11 @@ const dataSlice = createSlice({
     setStudentsStoreData(state, action: PayloadAction<StudentModel[] | null>) {
       state.students = action.payload ?? [];
     },
+    setSelectedStudents(state, action: PayloadAction<StudentModel[]>) {
+      state.selectedStudents = action.payload;
+    },
   },
 });
 
-export const { setStudentsStoreData } = dataSlice.actions;
+export const { setStudentsStoreData, setSelectedStudents } = dataSlice.actions;
 export default dataSlice.reducer;

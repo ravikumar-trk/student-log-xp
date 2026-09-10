@@ -97,7 +97,6 @@ const UserDialog = ({
         _: any,
         selectedSchools: any[]
     ) => {
-        debugger
         setForm((prev) => ({
             ...prev,
             SelectedSchools: selectedSchools,

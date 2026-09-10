@@ -8,9 +8,14 @@ const EditSchool = "/tickets/editSchool";
 const EditStudent = "/tickets/editStudent";
 const UploadExcel = "/tickets/uploadExcel";
 
-const ConfigureClasses = "/settings/configureClasses";
-const Holidays = "/settings/holidays";
+const ConfigureClasses = "/configurations/configureClasses";
+const Holidays = "/configurations/holidays";
 const TicketDetails = "/ticket-details";
+const StudentUpload = "/students/upload";
+const DailyWork = "/daily-work";
+const AssignWork = "/daily-work/assign";
+const WorkSubmissions = "/daily-work/submissions";
+const Subjects = "/configurations/subjects";
 
 const RoutePaths = {
   AddUser,
@@ -24,7 +29,12 @@ const RoutePaths = {
 
   ConfigureClasses,
   Holidays,
-  TicketsList, 
+  TicketsList,
   TicketDetails,
+  StudentUpload,
+  DailyWork,
+  AssignWork,
+  WorkSubmissions,
+  Subjects,
 };
 export default RoutePaths;

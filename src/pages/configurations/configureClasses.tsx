@@ -107,7 +107,6 @@ const ConfigureClasses = () => {
         }
         setSaving(true);
         try {
-            debugger
             // Exclude parent entries from payload (ParentID === 0)
             const classesPayload = classes
                 .filter((c) => c.ParentID && c.ParentID !== 0)

@@ -240,7 +240,6 @@ export default function TicketsList() {
 
     const handleAssignTicketToUser = async () => {
         try {
-            debugger
             const selectedRows = table.getSelectedRowModel().flatRows;
             if (selectedRows.length === 0) {
                 alert('Please select a ticket to assign');
@@ -296,7 +295,7 @@ export default function TicketsList() {
             <Grid size={8}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['DatePicker', 'DatePicker']}>
-                        {/* Start date: disable past dates by setting minDate to today */}
+                        {/* Start date: disable past dates by assigning minDate to today */}
                         <DatePicker
                             label="Start date"
                             value={startDate}

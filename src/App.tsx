@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 
 import theme from "./theme";
-
+import 'react-calendar/dist/Calendar.css';
 import Login from "./pages/auth/Login";
 import MainLayout from "./common/mainLayout";
 import ProtectedRoute from "./pages/auth/ProtectedRoute";

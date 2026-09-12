@@ -15,11 +15,14 @@ import { useStyles } from '../../theme/styles';
 import masterServices from '../../services/masterSerices';
 import type { SchoolModel } from '../../models/SchoolModel';
 import NoDataImage from '../../assets/images/NoData.svg';
+import { useAppDispatch } from '../../hooks/reduxHooks';
+import { showError, showSuccess, showWarning } from '../../features/common/commonSlice';
 
 const ACCOUNT_ID = 2; // TODO: replace with dynamic account id if available
 
 const ConfigureClasses = () => {
-    const { pageDetailsTitle, configureClassesBox, configureSchoolGrid, configureControlContainer, groupCard, parentTitle, parentCode, childListItem, configureClassActionButton, noDataImageDivStyle, noDataImageStyle, noDataImageStyleText } = useStyles();
+    const dispatch = useAppDispatch();
+    const { pageDetailsTitle, configureClassesBox, configureSchoolGrid, configureControlContainer, groupCard, parentTitle, parentCode, childListItem, noDataImageDivStyle, noDataImageStyle, noDataImageStyleText } = useStyles();
 
     const [schools, setSchools] = useState<SchoolModel[]>([]);
     const [schoolsLoading, setSchoolsLoading] = useState<boolean>(true);
@@ -45,7 +48,7 @@ const ConfigureClasses = () => {
             setSchools(data);
         } catch (err: any) {
             console.error(err?.message ?? err);
-            alert('Failed to fetch schools');
+            dispatch(showError('Failed to fetch schools'));
         } finally {
             setSchoolsLoading(false);
         }
@@ -77,7 +80,7 @@ const ConfigureClasses = () => {
             setSelectedIds(initialSelected);
         } catch (err: any) {
             console.error(err?.message ?? err);
-            alert('Failed to fetch classes');
+            dispatch(showError('Failed to fetch classes'));
         } finally {
             setClassesLoading(false);
         }
@@ -102,7 +105,7 @@ const ConfigureClasses = () => {
 
     const handleSave = async () => {
         if (!selectedSchool) {
-            alert('Please select a school first');
+            dispatch(showWarning('Please select a school first'));
             return;
         }
         setSaving(true);
@@ -120,13 +123,11 @@ const ConfigureClasses = () => {
                 loginUserID: 2,
                 classes: classesPayload,
             };
-            const res: any = await masterServices.upsertClasses(payload);
-            // Check response if needed
-            alert('Classes updated successfully');
-            console.log('Upsert response', res);
+            await masterServices.upsertClasses(payload);
+            dispatch(showSuccess('Classes updated successfully'));
         } catch (err: any) {
             console.error(err?.message ?? err);
-            alert(err?.message ?? 'Failed to save configured classes');
+            dispatch(showError(err?.message ?? 'Failed to save configured classes'));
         } finally {
             setSaving(false);
         }

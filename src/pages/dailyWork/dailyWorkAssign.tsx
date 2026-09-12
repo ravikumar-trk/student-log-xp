@@ -1,26 +1,32 @@
 import { useEffect, useState } from "react";
 import {
-    Alert,
     Box,
     Checkbox,
-    FormControl,
     FormControlLabel,
     Grid,
-    InputLabel,
-    MenuItem,
-    Select,
-    TextField,
     Typography,
 } from "@mui/material";
-import { useAppSelector } from "../../hooks/reduxHooks";
+import dayjs from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import masterServices from "../../services/masterSerices";
 import dailyWorkServices from "../../services/dailyWorkServices";
+import ThemedAutocomplete from "../../common/ThemedAutocomplete";
 import ThemedButton from "../../common/ThemedButton";
+import ThemedTextField from "../../common/ThemedTextField";
 import configurationsServices from "../../services/configurationsServices";
+import {
+    showError,
+    showSuccess,
+    showWarning,
+} from "../../features/common/commonSlice";
 
 const today = new Date().toISOString().slice(0, 10);
 
 const DailyWorkAssign = () => {
+    const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.common.userLoginInfo);
     const [schools, setSchools] = useState<any[]>([]);
     const [classes, setClasses] = useState<any[]>([]);
@@ -32,13 +38,10 @@ const DailyWorkAssign = () => {
     const [date, setDate] = useState(today);
     const [selected, setSelected] = useState<number[]>([]);
     const [entireClass, setEntireClass] = useState(true);
-    const [message, setMessage] = useState("");
     const [form, setForm] = useState({
         WorkType: "Homework",
         Title: "",
         Description: "",
-        DueDate: "",
-        DueTime: "",
     });
 
     useEffect(() => {
@@ -48,35 +51,59 @@ const DailyWorkAssign = () => {
                 const data = response.data?.Result ?? [];
                 setSchools(data);
                 if (data[0]) chooseSchool(data[0].SchoolID);
+            })
+            .catch((error: unknown) => {
+                dispatch(showError(error instanceof Error ? error.message : "Failed to fetch schools"));
             });
     }, [user?.AccountID]);
 
     const chooseSchool = async (id: number) => {
         setSchoolID(id);
         setClassID(0);
+        setSubjectID(0);
+        setStudents([]);
+        setSelected([]);
+        if (!id) {
+            setClasses([]);
+            setSubjects([]);
+            return;
+        }
         setSubjects([]);
-        const [classesResponse, subjectsResponse] = await Promise.all([
-            masterServices.getClassesBySchoolID(user?.AccountID || 0, id),
-            configurationsServices.getSubjectsBySchool(id),
-        ]);
-        setClasses(classesResponse.data?.Result ?? []);
-        setSubjects(subjectsResponse.data?.Result ?? []);
+        try {
+            const [classesResponse, subjectsResponse] = await Promise.all([
+                masterServices.getClassesBySchoolID(user?.AccountID || 0, id),
+                configurationsServices.getSubjectsBySchool(id),
+            ]);
+            setClasses(classesResponse.data?.Result ?? []);
+            setSubjects(subjectsResponse.data?.Result ?? []);
+        } catch (error: unknown) {
+            dispatch(showError(error instanceof Error ? error.message : "Failed to load school configuration"));
+        }
     };
 
     const chooseClass = async (id: number) => {
         setClassID(id);
-        const response: any = await (
-            await import("../../services/studentsServices")
-        ).default.getStudentsList({
-            Prefix: "",
-            StudentID: 0,
-            SchoolID: schoolID,
-            ClassID: id,
-            AccountID: user?.AccountID || 0,
-            LoginUserID: user?.UserID || 0,
-            IsDropdown: true,
-        });
-        setStudents(response.data?.Result ?? []);
+        setSelected([]);
+        if (!id) {
+            setStudents([]);
+            return;
+        }
+        try {
+            const response: any = await (
+                await import("../../services/studentsServices")
+            ).default.getStudentsList({
+                Prefix: "",
+                StudentID: 0,
+                SchoolID: schoolID,
+                ClassID: id,
+                AccountID: user?.AccountID || 0,
+                LoginUserID: user?.UserID || 0,
+                IsDropdown: true,
+            });
+            setStudents(response.data?.Result ?? []);
+        } catch (error: unknown) {
+            dispatch(showError(error instanceof Error ? error.message : "Failed to fetch students"));
+        }
     };
 
     const assign = async () => {
@@ -87,30 +114,28 @@ const DailyWorkAssign = () => {
             !form.Title.trim() ||
             (!entireClass && selected.length === 0)
         ) {
-            setMessage(
-                "School, class, subject, title, date, and recipients are required.",
-            );
+            dispatch(showWarning("School, class, subject, title, date, and recipients are required."));
             return;
         }
-        await dailyWorkServices.assign({
-            ...form,
-            SchoolID: schoolID,
-            ClassID: classID,
-            SubjectID: subjectID,
-            WorkDate: date,
-            DueDate: form.DueDate || null,
-            DueTime: form.DueTime || null,
-            EntireClass: entireClass,
-            StudentIDs: selected,
-        });
-        setMessage("Work assigned successfully.");
-        setForm({
-            WorkType: "Homework",
-            Title: "",
-            Description: "",
-            DueDate: "",
-            DueTime: "",
-        });
+        try {
+            await dailyWorkServices.assign({
+                ...form,
+                SchoolID: schoolID,
+                ClassID: classID,
+                SubjectID: subjectID,
+                WorkDate: date,
+                EntireClass: entireClass,
+                StudentIDs: selected,
+            });
+            dispatch(showSuccess("Work assigned successfully"));
+            setForm({
+                WorkType: "Homework",
+                Title: "",
+                Description: "",
+            });
+        } catch (error: unknown) {
+            dispatch(showError(error instanceof Error ? error.message : "Failed to assign work"));
+        }
     };
 
     return (
@@ -118,71 +143,49 @@ const DailyWorkAssign = () => {
             <Grid size={12}>
                 <Typography variant="h5">Assign Daily Work</Typography>
             </Grid>
-            {message && (
-                <Grid size={12}>
-                    <Alert>{message}</Alert>
-                </Grid>
-            )}
             <Grid size={{ xs: 12, md: 4 }}>
-                <FormControl fullWidth>
-                    <InputLabel>School</InputLabel>
-                    <Select
-                        value={schoolID}
-                        label="School"
-                        onChange={(event) => chooseSchool(Number(event.target.value))}
-                    >
-                        {schools.map((school) => (
-                            <MenuItem key={school.SchoolID} value={school.SchoolID}>
-                                {school.SchoolName}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-            </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
-                <FormControl fullWidth>
-                    <InputLabel>Class</InputLabel>
-                    <Select
-                        value={classID}
-                        label="Class"
-                        onChange={(event) => chooseClass(Number(event.target.value))}
-                    >
-                        {classes.map((item) => (
-                            <MenuItem key={item.ClassID} value={item.ClassID}>
-                                {item.ClassName || item.ClassCode}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-            </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
-                <FormControl fullWidth>
-                    <InputLabel>Subject</InputLabel>
-                    <Select
-                        value={subjectID}
-                        label="Subject"
-                        onChange={(event) => setSubjectID(Number(event.target.value))}
-                    >
-                        {subjects.map((item) => (
-                            <MenuItem key={item.SubjectID} value={item.SubjectID}>
-                                {item.SubjectName}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-            </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
-                <TextField
-                    fullWidth
-                    type="date"
-                    label="Work date"
-                    value={date}
-                    onChange={(event) => setDate(event.target.value)}
-                    slotProps={{ inputLabel: { shrink: true } }}
+                <ThemedAutocomplete
+                    options={schools}
+                    getOptionLabel={(school) => school.SchoolName}
+                    value={schools.find((school) => school.SchoolID === schoolID) ?? null}
+                    onChange={(_event, school) => chooseSchool(school?.SchoolID ?? 0)}
+                    label="School"
                 />
             </Grid>
             <Grid size={{ xs: 12, md: 4 }}>
-                <TextField
+                <ThemedAutocomplete
+                    options={classes}
+                    getOptionLabel={(item) => item.ClassName || item.ClassCode || ""}
+                    value={classes.find((item) => item.ClassID === classID) ?? null}
+                    onChange={(_event, item) => chooseClass(item?.ClassID ?? 0)}
+                    label="Class"
+                    disabled={!schoolID}
+                />
+            </Grid>
+            <Grid size={{ xs: 12, md: 4 }}>
+                <ThemedAutocomplete
+                    options={subjects}
+                    getOptionLabel={(item) => item.SubjectName}
+                    value={subjects.find((item) => item.SubjectID === subjectID) ?? null}
+                    onChange={(_event, item) => setSubjectID(item?.SubjectID ?? 0)}
+                    label="Subject"
+                    disabled={!schoolID}
+                />
+            </Grid>
+            <Grid size={{ xs: 12, md: 4 }}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                        label="Work date"
+                        value={date ? dayjs(date) : null}
+                        onChange={(newValue) => setDate(newValue?.format("YYYY-MM-DD") ?? "")}
+                        enableAccessibleFieldDOMStructure={false}
+                        slots={{ textField: ThemedTextField }}
+                        slotProps={{ textField: { fullWidth: true } }}
+                    />
+                </LocalizationProvider>
+            </Grid>
+            <Grid size={{ xs: 12, md: 4 }}>
+                <ThemedTextField
                     fullWidth
                     label="Title"
                     value={form.Title}
@@ -191,23 +194,17 @@ const DailyWorkAssign = () => {
                 />
             </Grid>
             <Grid size={{ xs: 12, md: 4 }}>
-                <TextField
-                    fullWidth
-                    select
-                    label="Work type"
+                <ThemedAutocomplete
+                    options={["Homework", "Classwork", "Task", "Other"]}
                     value={form.WorkType}
-                    onChange={(event) =>
-                        setForm({ ...form, WorkType: event.target.value })
+                    onChange={(_event, workType) =>
+                        setForm({ ...form, WorkType: workType ?? "Homework" })
                     }
-                >
-                    <MenuItem value="Homework">Homework</MenuItem>
-                    <MenuItem value="Classwork">Classwork</MenuItem>
-                    <MenuItem value="Task">Task</MenuItem>
-                    <MenuItem value="Other">Other</MenuItem>
-                </TextField>
+                    label="Work type"
+                />
             </Grid>
             <Grid size={12}>
-                <TextField
+                <ThemedTextField
                     fullWidth
                     multiline
                     minRows={3}
@@ -217,27 +214,6 @@ const DailyWorkAssign = () => {
                         setForm({ ...form, Description: event.target.value })
                     }
                     required
-                />
-            </Grid>
-            <Grid size={12}>
-                <TextField
-                    type="date"
-                    label="Due date"
-                    value={form.DueDate}
-                    onChange={(event) =>
-                        setForm({ ...form, DueDate: event.target.value })
-                    }
-                    slotProps={{ inputLabel: { shrink: true } }}
-                    sx={{ mr: 2 }}
-                />
-                <TextField
-                    type="time"
-                    label="Due time"
-                    value={form.DueTime}
-                    onChange={(event) =>
-                        setForm({ ...form, DueTime: event.target.value })
-                    }
-                    slotProps={{ inputLabel: { shrink: true } }}
                 />
             </Grid>
             <Grid size={12}>

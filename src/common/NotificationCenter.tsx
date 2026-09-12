@@ -7,7 +7,7 @@ import {
     type AppNotification,
 } from "../features/common/commonSlice";
 
-const defaultTimeout = 5000;
+const defaultTimeout = 5000000;
 
 const NotificationItem = ({ notification }: { notification: AppNotification }) => {
     const dispatch = useAppDispatch();

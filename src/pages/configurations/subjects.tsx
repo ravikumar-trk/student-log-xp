@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import {
-    Alert,
     Box,
     Grid,
     Typography,
@@ -13,8 +12,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { useAppSelector } from "../../hooks/reduxHooks";
-import dailyWorkServices from "../../services/dailyWorkServices";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import ThemedButton from "../../common/ThemedButton";
 import { GetTableOptions } from "../../common/tableStyles";
 import StatusChip from "../../common/chip/statusChip";
@@ -23,13 +21,14 @@ import IconButton from "@mui/material/IconButton";
 import ConfirmationDialog from "../../common/ConfirmationDialog";
 import UpsertSubjectDialog, { type Subject } from "./components/UpsertSubjectDialog";
 import configurationsServices from "../../services/configurationsServices";
+import { showError, showSuccess } from "../../features/common/commonSlice";
 
 const Subjects = () => {
+    const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.common.userLoginInfo);
     const [items, setItems] = useState<Subject[]>([]);
     const [edit, setEdit] = useState<Subject | null>(null);
     const [dialogMode, setDialogMode] = useState<"add" | "edit">("add");
-    const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const [deleteSubject, setDeleteSubject] = useState<Subject | null>(null);
     const load = async () => {
@@ -38,6 +37,8 @@ const Subjects = () => {
         try {
             const response: any = await configurationsServices.getSubjects(user.AccountID, true);
             setItems(response.data?.Result ?? []);
+        } catch (error: unknown) {
+            dispatch(showError(error instanceof Error ? error.message : "Failed to load subjects"));
         } finally {
             setLoading(false);
         }
@@ -61,9 +62,13 @@ const Subjects = () => {
         setEdit(subject);
     };
     const deactivate = async (id: number) => {
-        await configurationsServices.deactivateSubject(id);
-        setMessage("Subject deactivated.");
-        await load();
+        try {
+            await configurationsServices.deactivateSubject(id);
+            dispatch(showSuccess("Subject deactivated"));
+            await load();
+        } catch (error: unknown) {
+            dispatch(showError(error instanceof Error ? error.message : "Failed to deactivate subject"));
+        }
     };
 
     const confirmDeactivate = async () => {
@@ -131,11 +136,6 @@ const Subjects = () => {
                     handleClick={handleAdd}
                 />
             </Grid>
-            {message && (
-                <Grid size={12}>
-                    <Alert onClose={() => setMessage("")}>{message}</Alert>
-                </Grid>
-            )}
             <Grid size={12}>
                 <MaterialReactTable table={table} />
             </Grid>
@@ -146,10 +146,14 @@ const Subjects = () => {
                 onClose={() => setEdit(null)}
                 onSave={async (subject) => {
                     if (!user?.AccountID) return;
-                    await configurationsServices.saveSubject({ ...subject, AccountID: user.AccountID });
-                    setMessage("Subject saved.");
-                    setEdit(null);
-                    await load();
+                    try {
+                        await configurationsServices.saveSubject({ ...subject, AccountID: user.AccountID });
+                        dispatch(showSuccess("Subject saved"));
+                        setEdit(null);
+                        await load();
+                    } catch (error: unknown) {
+                        dispatch(showError(error instanceof Error ? error.message : "Failed to save subject"));
+                    }
                 }}
             />
             <ConfirmationDialog

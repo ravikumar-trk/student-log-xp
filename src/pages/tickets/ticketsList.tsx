@@ -33,7 +33,7 @@ import masterServices from '../../services/masterSerices';
 import type { UserModel } from '../../models/UserModel';
 import ThemedAutocomplete from '../../common/ThemedAutocomplete';
 import { useAppDispatch } from '../../hooks/reduxHooks';
-import { showError, showWarning } from '../../features/common/commonSlice';
+import { showError, showSuccess, showWarning } from '../../features/common/commonSlice';
 
 // Ticket data type
 type Ticket = {
@@ -237,7 +237,7 @@ export default function TicketsList() {
         catch (err: any) {
             console.error('Error fetching tickets:', err?.message ?? err);
             setLoading(false);
-            alert(err?.message ?? 'Failed to fetch tickets');
+            dispatch(showError(err?.message ?? 'Failed to fetch tickets'));
         }
     }
 
@@ -245,30 +245,30 @@ export default function TicketsList() {
         try {
             const selectedRows = table.getSelectedRowModel().flatRows;
             if (selectedRows.length === 0) {
-                alert('Please select a ticket to assign');
+                dispatch(showWarning('Please select a ticket to assign'));
                 return;
             }
             // 
             const ticketIds = selectedRows.map((row) => row.original.TicketID);
             const userId = selectedUser?.UserID;
             if (!userId) {
-                alert('Please select a user to assign the ticket to');
+                dispatch(showWarning('Please select a user to assign the ticket to'));
                 return;
             }
             const response = await ticketsSerices.assignTicketsToUser(ticketIds.join(','), userId);
             if (response.status === 200) {
                 console.log('Assign ticket response:', response);
-                alert(response.data.Message || 'Ticket(s) assigned successfully');
+                dispatch(showSuccess(response.data.Message || 'Ticket(s) assigned successfully'));
                 // Optionally, refresh tickets list after assignment
                 fetchTickets();
             }
             if (response.status === 202) {
-                alert(response.data.Warnings[0] || 'Ticket assignment returned a warning');
+                dispatch(showWarning(response.data.Warnings[0] || 'Ticket assignment returned a warning'));
             }
         }
         catch (err: any) {
             console.error('Error assigning ticket:', err?.message ?? err);
-            alert(err?.message ?? 'Failed to assign ticket');
+            dispatch(showError(err?.message ?? 'Failed to assign ticket'));
         }
         finally {
             setOpenDialog(false);

@@ -8,8 +8,15 @@ const dailyWorkServices = {
     const query = date ? `?date=${date}` : "";
     return axiosClient.get(`/daily-work/teacher${query}`);
   },
-  async getStudentWork(studentID: number, date: string) {
-    return axiosClient.get(`/daily-work/student/${studentID}?date=${date}`);
+  async getStudentWork(
+    schoolID: number,
+    classID: number,
+    studentID: number | null,
+    date: string,
+  ) {
+    return axiosClient.get(`/daily-work`, {
+      params: { schoolID, classID, studentID, date },
+    });
   },
   async submit(payload: unknown) {
     return axiosClient.post("/daily-work/submissions", payload);

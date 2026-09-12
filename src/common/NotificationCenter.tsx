@@ -1,45 +1,11 @@
 import { useEffect, useRef } from "react";
-import "react-notifications/lib/notifications.css";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
-import {
-    dismissNotification,
-    type AppNotification,
-} from "../features/common/commonSlice";
+import { dismissNotification } from "../features/common/commonSlice";
 
-const defaultTimeout = 5000000;
-
-const NotificationItem = ({ notification }: { notification: AppNotification }) => {
-    const dispatch = useAppDispatch();
-
-    return (
-        <div
-            className={`notification notification-${notification.type}`}
-            role="alert"
-        >
-            <button
-                type="button"
-                className="notification-close"
-                aria-label="Close notification"
-                onClick={() => dispatch(dismissNotification(notification.id))}
-                style={{
-                    position: "absolute",
-                    top: 8,
-                    right: 8,
-                    border: 0,
-                    background: "transparent",
-                    color: "inherit",
-                    cursor: "pointer",
-                    fontSize: "1rem",
-                }}
-            >
-                x
-            </button>
-            {notification.title && <div className="title">{notification.title}</div>}
-            <div>{notification.message}</div>
-        </div>
-    );
-};
+const defaultTimeout = 5000;
 
 const NotificationCenter = () => {
     const dispatch = useAppDispatch();
@@ -54,20 +20,27 @@ const NotificationCenter = () => {
 
             displayedNotificationIds.current.add(notification.id);
             const timeout = notification.timeout ?? defaultTimeout;
-            window.setTimeout(() => {
-                dispatch(dismissNotification(notification.id));
-                displayedNotificationIds.current.delete(notification.id);
-            }, timeout);
+            const content = notification.title ? (
+                <>
+                    <strong>{notification.title}</strong>
+                    <div>{notification.message}</div>
+                </>
+            ) : (
+                notification.message
+            );
+
+            toast[notification.type](content, {
+                toastId: notification.id,
+                autoClose: timeout,
+                onClose: () => {
+                    dispatch(dismissNotification(notification.id));
+                    displayedNotificationIds.current.delete(notification.id);
+                },
+            });
         });
     }, [dispatch, notifications]);
 
-    return (
-        <div className="notification-container" aria-live="polite">
-            {notifications.map((notification) => (
-                <NotificationItem key={notification.id} notification={notification} />
-            ))}
-        </div>
-    );
+    return <ToastContainer position="top-right" newestOnTop closeOnClick />;
 };
 
 export default NotificationCenter;

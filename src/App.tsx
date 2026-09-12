@@ -16,6 +16,7 @@ import ProtectedRoute from "./pages/auth/ProtectedRoute";
 import { useAppDispatch, useAppSelector } from "./hooks/reduxHooks";
 import { setUserLoginInfo } from "./features/common/commonSlice";
 import { getCurrentUser } from "./pages/auth/decodeToken";
+import NotificationCenter from "./common/NotificationCenter";
 
 const App: React.FC = () => {
 
@@ -40,6 +41,7 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <NotificationCenter />
 
       <BrowserRouter>
         <Routes>

@@ -32,6 +32,8 @@ import { useTheme } from '@mui/material/styles';
 import masterServices from '../../services/masterSerices';
 import type { UserModel } from '../../models/UserModel';
 import ThemedAutocomplete from '../../common/ThemedAutocomplete';
+import { useAppDispatch } from '../../hooks/reduxHooks';
+import { showError, showWarning } from '../../features/common/commonSlice';
 
 // Ticket data type
 type Ticket = {
@@ -46,6 +48,7 @@ type Ticket = {
 
 
 export default function TicketsList() {
+    const dispatch = useAppDispatch();
     // startDate and endDate state
     const [startDate, setStartDate] = useState<Dayjs | null>(null);
     const [endDate, setEndDate] = useState<Dayjs | null>(null);
@@ -72,14 +75,14 @@ export default function TicketsList() {
         } catch (err: any) {
             setUsersLoading(false);
             console.error(err?.message ?? err);
-            alert(err?.message ?? 'Failed to fetch account details');
+            dispatch(showError(err?.message ?? 'Failed to fetch account details'));
         }
     }
 
     const handleClickOpenDialog = () => {
         const selectedRows = table.getSelectedRowModel().flatRows;
         if (selectedRows.length === 0) {
-            alert('Please select a ticket to assign');
+            dispatch(showWarning('Please select a ticket to assign'));
             return;
         }
         getUsersByAccountIDAPI();

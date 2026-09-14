@@ -6,7 +6,7 @@ import {
     Typography,
 } from "@mui/material";
 import dailyWorkServices from "../../services/dailyWorkServices";
-import Calendar from "react-calendar";
+// import Calendar from "react-calendar";
 import { useNavigate } from "react-router-dom";
 import ThemedAutocomplete from "../../common/ThemedAutocomplete";
 import ThemedButton from "../../common/ThemedButton";
@@ -21,6 +21,8 @@ import {
     showSuccess,
     showWarning,
 } from "../../features/common/commonSlice";
+import WeeklyCalendar from "../../common/WeeklyCalendar";
+import { useStyles } from '../../theme/styles';
 
 type ValuePiece = Date | null;
 
@@ -46,6 +48,16 @@ type DailyWorkItem = {
 const DailyWork = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const {
+        dailyWorkPage,
+        dailyWorkFilters,
+        dailyWorkActions,
+        dailyWorkItemCard,
+        dailyWorkItemHeader,
+        dailyWorkItemTitle,
+        dailyWorkItemBody,
+        dailyWorkItemDescription,
+    } = useStyles();
     const userLoginInfo = useAppSelector((state) => state.common.userLoginInfo);
     const [items, setItems] = useState<DailyWorkItem[]>([]);
     const [value, onChange] = useState<Value>(new Date());
@@ -113,7 +125,7 @@ const DailyWork = () => {
     };
 
     const loadStudent = async () => {
-        if (!selectedSchool || !selectedClass || !selectedStudent) {
+        if (!selectedSchool || !selectedClass) {
             dispatch(showWarning("Select a school, class, and student before searching"));
             return;
         }
@@ -157,15 +169,23 @@ const DailyWork = () => {
         }
     };
 
+    const handleDateChange = (date: Date) => {
+        onChange(date);
+    }
+
     return (
-        <Grid container spacing={2} sx={{ p: 2 }}>
-            <Grid size={12}>
+        <Grid container spacing={2} sx={dailyWorkPage}>
+            {/* <Grid size={12}>
                 <Typography variant="h5">Daily Work</Typography>
-            </Grid>
+            </Grid> */}
             <Grid size={12}>
-                <Calendar onChange={onChange} value={value} />
+                {/* <Calendar onChange={onChange} value={value} /> */}
+                <WeeklyCalendar
+                    defaultValue={new Date()}
+                    onChange={handleDateChange}
+                />
             </Grid>
-            <Grid container size={12} spacing={2} alignItems="center">
+            <Grid container size={12} spacing={2} sx={dailyWorkFilters}>
                 <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <ThemedAutocomplete
                         options={schools}
@@ -214,34 +234,37 @@ const DailyWork = () => {
                         disabled={!selectedClass}
                     />
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6, md: 3 }} sx={{ display: "flex", gap: 1 }}>
-                    <Button variant="contained" onClick={loadStudent} disabled={!selectedStudent}>
-                        Search
-                    </Button>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }} sx={dailyWorkActions}>
+                    <ThemedButton
+                        text="Search"
+                        variant="outlined"
+                        handleClick={loadStudent}
+                        disabled={!selectedClass}
+                    />
                     <ThemedButton
                         text="Add Work"
-                        variant="outlined"
+                        variant="contained"
                         handleClick={() => navigate(RoutePaths.AssignWork)}
                     />
                 </Grid>
             </Grid>
             {items.map((item) => (
-                <Grid size={{ xs: 12, md: 6 }} key={item.AssignmentID}>
-                    <Box sx={{ p: 2, border: "1px solid #ddd" }}>
-                        <Typography variant="h6">{item.Title}</Typography>
-                        <Typography>
-                            {item.SubjectName} · {item.WorkType} · {item.Status}
-                        </Typography>
-                        <Typography sx={{ my: 1 }}>{item.Description}</Typography>
-                        <Typography>
-                            Teacher: {item.TeacherName || "Teacher"}
-                            {item.DueDate ? ` · Due ${item.DueDate}` : ""}
-                        </Typography>
-                        {(item.Status === "Pending" || item.Status === "Returned") && (
-                            <Button onClick={() => submitWork(item.AssignmentID)}>
-                                Submit work
-                            </Button>
-                        )}
+                <Grid size={{ xs: 12, md: 4 }} key={item.AssignmentID}>
+                    <Box sx={dailyWorkItemCard}>
+                        <Box sx={dailyWorkItemHeader}>
+                            <Typography variant="h6" sx={dailyWorkItemTitle}>{item.SubjectName}</Typography>
+                        </Box>
+                        <Box sx={dailyWorkItemBody}>
+                            <Typography>
+                                {item.Title} · {item.WorkType} · {item.Status}
+                            </Typography>
+                            <Typography sx={dailyWorkItemDescription}>{item.Description}</Typography>
+                            <Typography>
+                                Teacher: {item.TeacherName || "Teacher"}
+                            </Typography>
+                        </Box>
+
+
                     </Box>
                 </Grid>
             ))}

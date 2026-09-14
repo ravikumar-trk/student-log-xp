@@ -329,6 +329,38 @@ export function useStyles() {
         marginRight: 4,
       },
 
+      // Daily work styles
+      dailyWorkPage: {
+        p: 2,
+      },
+      dailyWorkFilters: {
+        alignItems: "center",
+      },
+      dailyWorkActions: {
+        display: "flex",
+        gap: 1,
+        justifyContent: "end",
+      },
+      dailyWorkItemCard: {
+        p: 0,
+        border: `1px solid ${borderColor}`,
+      },
+      dailyWorkItemHeader: {
+        p: 2,
+        borderBottom: `1px solid ${borderColor}`,
+        backgroundColor: isDark ? darkBackgroundColor : primaryColor.lightColor,
+      },
+      dailyWorkItemTitle: {
+        color: isDark ? darkModeTextColor : "#000",
+      },
+      dailyWorkItemBody: {
+        p: 2,
+        color: isDark ? darkModeTextColor : "#000",
+      },
+      dailyWorkItemDescription: {
+        my: 1,
+      },
+
       // ticket details styles
       pageDetailsTitle: {
         margin: 0,

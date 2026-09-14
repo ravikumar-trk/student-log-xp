@@ -21,9 +21,10 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
-type ThemedButtonProps = ButtonProps & {
+type ThemedButtonProps = Omit<ButtonProps, 'disabled'> & {
     invert?: boolean;
     text: string;
+    disabled?: boolean;
     icon?: React.ReactNode | string;
     isFile?: boolean;
     iconPosition?: 'start' | 'end';
@@ -37,7 +38,7 @@ const ThemedButton: React.FC<ThemedButtonProps> = ({
     variant,
     icon,
     iconPosition = 'start',
-    children,
+    disabled = false,
     isFile,
     handleClick,
     accept = '.xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel',
@@ -104,6 +105,8 @@ const ThemedButton: React.FC<ThemedButtonProps> = ({
     const IconNodeAfter = iconPosition === 'end' ? ResolvedIcon : null;
 
     const onButtonClick = () => {
+        if (disabled) return;
+
         if (isFile) {
             inputRef.current?.click();
         } else {
@@ -112,6 +115,8 @@ const ThemedButton: React.FC<ThemedButtonProps> = ({
     };
 
     const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (disabled) return;
+
         const files = e.target.files;
         if (handleClick) handleClick(files);
     };
@@ -139,6 +144,7 @@ const ThemedButton: React.FC<ThemedButtonProps> = ({
             }}
             onClick={onButtonClick}
             {...rest}
+            disabled={disabled}
         >
             {IconNodeBefore && (
                 <span style={{ display: 'inline-flex', marginRight: 8, alignItems: 'center' }}>

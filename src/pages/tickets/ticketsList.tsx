@@ -295,7 +295,7 @@ export default function TicketsList() {
 
     return <>
         <Grid container spacing={2} sx={{ p: 2 }}>
-            <Grid size={8}>
+            <Grid size={{ xs: 12, sm: 6, md: 6 }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['DatePicker', 'DatePicker']}>
                         {/* Start date: disable past dates by assigning minDate to today */}
@@ -331,7 +331,7 @@ export default function TicketsList() {
                     </DemoContainer>
                 </LocalizationProvider>
             </Grid>
-            <Grid size={4} style={{ display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
+            <Grid size={{ xs: 12, sm: 6, md: 6 }} style={{ display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
                 <ThemedButton
                     text="Clear"
                     variant="outlined"

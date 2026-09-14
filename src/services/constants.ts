@@ -3,7 +3,7 @@ export const GET_ACCOUNT_DETAILS = "/account/{accountId}/account-details";
 export const GET_SCHOOLS_BY_ACCOUNT_ID = "/account/{accountId}/schools";
 export const GET_USERS_BY_ACCOUNT_ID = "/account/{accountId}/users";
 export const GET_CLASSES_BY_SCHOOL_ID =
-  "/account/{accountId}/school/{schoolId}/classes";
+  "/account/{accountId}/school/{schoolId}/classes?isActive=1";
 export const POST_INSERT_SCHOOL = "/account/school";
 export const PATCH_UPDATE_SCHOOL = "/account/school";
 export const POST_INSERT_USER = "/account/user";

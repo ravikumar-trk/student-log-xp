@@ -214,7 +214,7 @@ export default function StudentsList() {
 
     return <>
         <Grid container spacing={2} sx={{ p: 2 }}>
-            <Grid size={2}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                 <ThemedAutocomplete
                     {...schoolProps}
                     id="school-select"
@@ -222,7 +222,7 @@ export default function StudentsList() {
                     label="School"
                 />
             </Grid>
-            <Grid size={2}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                 <ThemedAutocomplete
                     {...classProps}
                     id="class-select"
@@ -230,7 +230,7 @@ export default function StudentsList() {
                     label="Class"
                 />
             </Grid>
-            <Grid size={2}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                 <ThemedTextField
                     id="standard-basic"
                     label="Admission No."
@@ -240,7 +240,7 @@ export default function StudentsList() {
                     onChange={(event) => setAdmissionNo(event.target.value)}
                 />
             </Grid>
-            <Grid size={2}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                 <ThemedTextField
                     id="standard-basic"
                     label="Student Name"
@@ -250,7 +250,7 @@ export default function StudentsList() {
                     onChange={(event) => setStudentName(event.target.value)}
                 />
             </Grid>
-            <Grid size={4} style={{ textAlign: 'right' }}>
+            <Grid size={{ xs: 12, sm: 12, md: 12 }} style={{ textAlign: 'right' }}>
                 <ThemedButton text="Clear" variant="outlined" handleClick={handleClear} /> &nbsp;&nbsp;
                 <ThemedButton text="Search" variant="contained" /> &nbsp;&nbsp;
                 <ThemedButton

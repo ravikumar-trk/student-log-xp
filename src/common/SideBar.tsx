@@ -7,6 +7,7 @@ import FactCheckIcon from '@mui/icons-material/FactCheck';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import TuneIcon from '@mui/icons-material/Tune';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
 import { useAppSelector } from '../hooks/reduxHooks';
 import { useStyles } from '../theme/styles';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -47,6 +48,14 @@ const SideBar: React.FC = () => {
             ]
         },
         {
+            page: 'Attendance', icon: <HowToRegIcon />,
+            pages: [
+                { text: 'Attendance', path: '/attendance' },
+                { text: 'History', path: '/attendance/history' },
+                { text: 'Manual Entry', path: '/attendance/manual' },
+            ]
+        },
+        {
             page: 'Reports', icon: <SummarizeIcon />,
             pages: [
                 { text: 'Reports', path: '/reports' },
@@ -62,6 +71,7 @@ const SideBar: React.FC = () => {
     const [selected, setSelected] = useState('Dashboard');
 
     const navigateTo = (text: string) => {
+        debugger
         setSelected(text);
         navigate(`/${text.toLowerCase()}`);
     }

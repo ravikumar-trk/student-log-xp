@@ -19,6 +19,9 @@ const DailyWork = lazy(() => import('../pages/dailyWork/dailyWork'));
 const DailyWorkAssign = lazy(() => import('../pages/dailyWork/dailyWorkAssign'));
 const DailyWorkSubmissions = lazy(() => import('../pages/dailyWork/dailyWorkSubmissions'));
 const Subjects = lazy(() => import('../pages/configurations/subjects'));
+const StudentGateDashboard = lazy(() => import('../pages/studentGate/StudentGateDashboard'));
+const StudentGateHistory = lazy(() => import('../pages/studentGate/StudentGateHistory'));
+const ManualStudentGate = lazy(() => import('../pages/studentGate/ManualStudentGate'));
 
 const RouterPage = () => {
     const { bodyMainDiv, bodySubMainDiv } = useStyles();
@@ -49,6 +52,9 @@ const RouterPage = () => {
                         <Route path="/daily-work" element={<DailyWork />} />
                         <Route path="/daily-work/assign" element={<DailyWorkAssign />} />
                         <Route path="/daily-work/submissions" element={<DailyWorkSubmissions />} />
+                        <Route path="/attendance" element={<StudentGateDashboard />} />
+                        <Route path="/attendance/history" element={<StudentGateHistory />} />
+                        <Route path="/attendance/manual" element={<ManualStudentGate />} />
                         <Route path="/dashboard" element={<div style={{ padding: 24 }}>Dashboard</div>} />
                         <Route path="/" element={<div style={{ padding: 24 }}>Dashboard</div>} />
                         <Route path="*" element={<div style={{ padding: 24 }}>Page not found</div>} />

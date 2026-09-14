@@ -15,3 +15,7 @@ export const POST_CREATE_TICKET = "/ticket/create-ticket";
 export const GET_TICKETS = "/ticket/tickets";
 export const GET_TICKET_DETAILS = "/ticket/{ticketId}/ticket-details";
 export const POST_ASSIGN_TICKET = "/ticket/assign-ticket";
+export const STUDENT_GATE_DASHBOARD = "/attendance/dashboard";
+export const STUDENT_GATE_LIVE_EVENTS = "/attendance/live-events";
+export const STUDENT_GATE_HISTORY = "/attendance/student/{studentId}/history";
+export const STUDENT_GATE_MANUAL_SWIPE = "/attendance/manual-swipe";
